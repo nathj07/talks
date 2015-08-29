@@ -1,0 +1,61 @@
+Unit Testing
+27 Oct 2015
+Tags: go meetup, unit testing, standard library
+
+Nathan Davies
+Software Engineer, Turnitin
+ndavies@turnitin.com
+@nathj07
+
+* Scene Setting
+- Standard library only
+- Start simple
+- Refactor
+- Table Based Tests
+
+* Using the Standard Library
+- Test Code
+- Code to test
+- Will drop to my shell to show tests running
+
+
+* Some TDD 
+.code ../code/conversation_test.go /^func TestStart/,/^}/
+- A simple test to prove the function exists
+- code
+- pass
+
+* More test cases 
+- Might be nice to have multi-lingual support
+.code ../code/conversation_test.go /START FR_ES/,/END FR_ES/
+- More languages = more test cases. Very tedious
+
+* Refactor
+- The previous tests are beneficial
+- Also very repetitive
+- Be better to have less code 
+- Be nice if it were easier to add to
+
+* Table Based Testing
+.code ../code/conversation_test.go /START TABLE/,/END TABLE/
+
+* Benefits
+- Adding more language support = add a new struct
+- the test code is easy to read
+- coverage is clear from the code
+- tests are faster to write
+
+* Typical Workflow for me
+- some code
+- some test
+- more tests, more code
+- check the coverage and race conditions as I go
+- for bugs it's test to prove the fail
+- code to make the pass e.g. my work on go-validator (check the correct name)
+
+* Extra features 
+- coverage - show the output of coverage
+- Benchmarking - is particularly useful and part of the standard, lets try that another day
+- race - useful for finding some potential race conditions particulalry helpful in highly concurrent, long running applications
+- Libraries like go-convey and gocheck may be talked about next...
+
