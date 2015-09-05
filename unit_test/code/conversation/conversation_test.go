@@ -1,32 +1,25 @@
-package main
+package conversation
 
 import "testing"
 
-func TestStart(t *testing.T) {
+func TestGreeting(t *testing.T) {
 	// call start to ensure it exists
-	if got := start("Hello"); got != "Hello" {
+	if got := Greeting("Hello"); got != "Hello" {
 		t.Errorf("Got %s; Expected Hello", got)
 	}
 }
 
-func TestStartBasicResponseFrech(t *testing.T) {
-	expected := "Salut, ça va ?"
-	if got := start("Salut"); got != expected {
-		t.Errorf("Expected: %s, Got: %s", expected, got)
-	}
-}
-
 // START FR_ES
-func TestStart2Frech(t *testing.T) {
+func TestGreetingV2Frech(t *testing.T) {
 	expected := "Salut, ça va ?"
-	if got := start2("Salut"); got != expected {
+	if got := GreetingV2("Salut"); got != expected {
 		t.Errorf("Expected: %s, Got: %s", expected, got)
 	}
 }
 
-func TestStart2Spanish(t *testing.T) {
+func TestGreetingV2Spanish(t *testing.T) {
 	expected := "Hola, ¿Cómo estás?"
-	if got := start2("Hola"); got != expected {
+	if got := GreetingV2("Hola"); got != expected {
 		t.Errorf("Expected: %s, Got: %s", expected, got)
 	}
 }
@@ -53,12 +46,30 @@ var testTable = []testData{
 	},
 }
 
-func TestStart2(t *testing.T) {
+// END TABLE
+
+func TestGreetingV2All(t *testing.T) {
 	for _, td := range testTable {
-		if got := start2(td.input); got != td.expected {
+		if got := GreetingV2(td.input); got != td.expected {
 			t.Errorf("Tag: %s: Expected: %s; Got: %s", td.tag, td.expected, got)
 		}
 	}
 }
 
-// END TABLE
+// Extras for demo
+/*
+testData{
+	tag:      "English",
+	input:    "Good morning",
+	expected: "Good morning",
+},
+testData{
+	tag:      "Shop Greeting",
+	input:    "Hello",
+	expected: "How may I help you?",
+},
+testData{
+	tag:      "SimpleFrench",
+	input:    "Bonjour",
+	expected: "Salut",
+},*/

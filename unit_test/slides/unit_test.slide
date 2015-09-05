@@ -1,6 +1,6 @@
 Unit Testing
 27 Oct 2015
-Tags: go meetup, unit testing, standard library
+Tags: go meetup, unit testing, standard library, go northeast
 
 Nathan Davies
 Software Engineer, Turnitin
@@ -8,54 +8,74 @@ ndavies@turnitin.com
 @nathj07
 
 * Scene Setting
-- Standard library only
+- Very contrived code!
+- Standard library only; testing package
 - Start simple
 - Refactor
 - Table Based Tests
+- Coverage
+- Benchmarking
 
 * Using the Standard Library
 - Test Code
 - Code to test
-- Will drop to my shell to show tests running
+- Will drop to my shell run tests
 
 
 * Some TDD 
-.code ../code/conversation_test.go /^func TestStart/,/^}/
-- A simple test to prove the function exists
-- code
-- pass
+.code ../code/conversation/conversation_test.go /^func TestGreeting/,/^}/
+- Until the function is written this won't run
+- Once written we prove the function defintion - signature and body
+- t.Errorf: Allows the error to be reported but the code to continue in _this_ test function
+- t.Fatalf: Reports the error and _stops_ this test function
+- This is rudimentary, the very basis of red-to-green TDD
 
-* More test cases 
+* The App Advances 
 - Might be nice to have multi-lingual support
-.code ../code/conversation_test.go /START FR_ES/,/END FR_ES/
+- Be nice to have more complex replies
+
+* Take the TDD Path
+.code ../code/conversation/conversation_test.go /START FR_ES/,/END FR_ES/
+
+* Now the Function
+.code ../code/conversation/conversation.go /^func GreetingV2/,/^}/
+- The tests will pass - check it out with go test -v
 - More languages = more test cases. Very tedious
 
 * Refactor
 - The previous tests are beneficial
 - Also very repetitive
-- Be better to have less code 
-- Be nice if it were easier to add to
+- Be better to have less repetition in tests
+- Be nice if it were easier to add tests
 
 * Table Based Testing
-.code ../code/conversation_test.go /START TABLE/,/END TABLE/
+- Define a local scope test set
+- Typically a slice of structs covering the inputs and outputs
+.code ../code/conversation/conversation_test.go /START TABLE/,/END TABLE/
+
+* The Test
+.code ../code/conversation/conversation_test.go /^func TestGreetingV2All/,/^}/
 
 * Benefits
 - Adding more language support = add a new struct
-- the test code is easy to read
-- coverage is clear from the code
-- tests are faster to write
+- Test code is easy to read
+- Test output is clear
+- Coverage is clear from the code
+- Tests are faster to write
+- Bugs are easier to prove and fix (_demo_)
 
-* Typical Workflow for me
-- some code
-- some test
-- more tests, more code
+* My Typical Workflow
+- Intial code
+- Basic test
+- More tests, more code
 - check the coverage and race conditions as I go
-- for bugs it's test to prove the fail
-- code to make the pass e.g. my work on go-validator (check the correct name)
+- For bugs it's test to prove the fail
+- Code to pass the test e.g. my work on govalidator (check the correct name)
 
 * Extra features 
-- coverage - show the output of coverage
-- Benchmarking - is particularly useful and part of the standard, lets try that another day
-- race - useful for finding some potential race conditions particulalry helpful in highly concurrent, long running applications
+- coverage - _demo_ console and web report
+- race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
+- Benchmarking - is particularly useful part of the standard, lets try that another day
 - Libraries like go-convey and gocheck may be talked about next...
 
+* Q&A
