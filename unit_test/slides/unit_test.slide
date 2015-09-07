@@ -72,6 +72,10 @@ ndavies@turnitin.com
 - For bugs it's test to prove the fail
 - Code to pass the test e.g. my work on govalidator (check the correct name)
 
+* NEXT
+- Cover Benchmarking via a simple example
+- Add a references section
+
 * Extra features 
 - coverage - _demo_ console and web report
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
