@@ -73,7 +73,21 @@ ndavies@turnitin.com
 - Code to pass the test e.g. my work on govalidator (check the correct name)
 
 * NEXT
-- Cover Benchmarking via a simple example
+- Benchmarking
+- Example Tests
+
+* Benchmarking
+- Built in to the language
+- No need to write timers and calculate ns/op
+.code ../code/fibonacci/fibonacci.go
+
+* The Test
+.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnth/,/^}/
+.code ../code/fibonacci/fibonacci.out
+
+
+* TODO
+- Example Tests - super useful on Godoc
 - Add a references section
 
 * Extra features 

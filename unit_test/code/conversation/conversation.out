@@ -1,8 +1,6 @@
 mode: set
 github.com/nathj07/talks/unit_test/code/conversation/conversation.go:4.39,6.2 1 1
 github.com/nathj07/talks/unit_test/code/conversation/conversation.go:10.41,12.18 1 1
-github.com/nathj07/talks/unit_test/code/conversation/conversation.go:23.2,23.17 1 1
+github.com/nathj07/talks/unit_test/code/conversation/conversation.go:19.2,19.17 1 0
 github.com/nathj07/talks/unit_test/code/conversation/conversation.go:13.2,14.27 1 1
 github.com/nathj07/talks/unit_test/code/conversation/conversation.go:15.2,16.33 1 1
-github.com/nathj07/talks/unit_test/code/conversation/conversation.go:17.2,18.31 1 1
-github.com/nathj07/talks/unit_test/code/conversation/conversation.go:19.2,20.17 1 1
