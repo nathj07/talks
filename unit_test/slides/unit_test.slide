@@ -70,7 +70,8 @@ ndavies@turnitin.com
 - More tests, more code
 - check the coverage and race conditions as I go
 - For bugs it's test to prove the fail
-- Code to pass the test e.g. my work on govalidator (check the correct name)
+- Code to pass the test e.g. my work on govalidator
+- -test.run=TestName - to run a single test case
 
 * NEXT
 - Benchmarking
@@ -82,18 +83,29 @@ ndavies@turnitin.com
 .code ../code/fibonacci/fibonacci.go
 
 * The Test
+.code ../code/fibonacci/fibonacci_test.go /^func TestGetnth/,/^}
+- Simiplified the test cases with annonymous structs
+
+* The Benchmark
 .code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnth/,/^}/
 .code ../code/fibonacci/fibonacci.bench
+- Each tests looks further into the series
+- Could change the test to get only one position _demo_
+- This shows that we could implement some effeciencies to reduce time reaching further into the series.
 
 
 * TODO
+
 - Example Tests - super useful on Godoc
-- Add a references section
 
 * Extra features 
+- you can use profiling on tests: -cpuprofile=test.prof
 - coverage - _demo_ console and web report
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
-- Benchmarking - is particularly useful part of the standard, lets try that another day
-- Libraries like go-convey and gocheck may be talked about next...
+- Libraries like go-convey and gocheck are worth exploring, I've tried gocheck and found I don't need it.
+
+* References
+- http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
+- Andrew Gerrand Stupid Gopher Tricks: https://www.youtube.com/watch?v=UECh7X07m6E
 
 * Q&A

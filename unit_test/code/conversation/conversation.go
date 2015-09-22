@@ -14,6 +14,10 @@ func GreetingV2(greeting string) string {
 		return "Salut, ça va ?"
 	case "Hola":
 		return "Hola, ¿Cómo estás?"
+	case "Hello":
+		return "How may I help you?"
+	case "Bonjour":
+		return "Salut"
 	}
 	// return at least the given greeting to seem polite
 	return greeting

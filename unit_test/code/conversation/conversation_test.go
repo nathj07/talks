@@ -3,7 +3,7 @@ package conversation
 import "testing"
 
 func TestGreeting(t *testing.T) {
-	// call start to ensure it exists
+	// call Greeting to ensure it exists
 	if got := Greeting("Hello"); got != "Hello" {
 		t.Errorf("Got %s; Expected Hello", got)
 	}
