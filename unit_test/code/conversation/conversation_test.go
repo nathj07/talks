@@ -27,19 +27,17 @@ func TestGreetingV2Spanish(t *testing.T) {
 // END FR_ES
 
 // START TABLE
-type testData struct {
+var testTable = []struct {
 	tag      string // identify the test case
 	input    string
 	expected string
-}
-
-var testTable = []testData{
-	testData{
+}{
+	{
 		tag:      "French",
 		input:    "Salut",
 		expected: "Salut, ça va ?",
 	},
-	testData{
+	{
 		tag:      "Spanish",
 		input:    "Hola",
 		expected: "Hola, ¿Cómo estás?",
@@ -58,18 +56,26 @@ func TestGreetingV2All(t *testing.T) {
 
 // Extras for demo
 /*
-testData{
-	tag:      "English",
+// "Bug"
+{
+	tag: "English Informal",
+	input: "Hello, old friend",
+	expected: "Good to see you again",
+},
+// Increase converage
+{
+	tag:      "Default",
 	input:    "Good morning",
 	expected: "Good morning",
 },
-testData{
+// Add extra options
+{
 	tag:      "Shop Greeting",
 	input:    "Hello",
 	expected: "How may I help you?",
 },
-testData{
-	tag:      "SimpleFrench",
+{
+	tag:      "Simple French",
 	input:    "Bonjour",
 	expected: "Salut",
 },*/

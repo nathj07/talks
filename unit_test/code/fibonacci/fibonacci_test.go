@@ -22,6 +22,6 @@ func TestGetnth(t *testing.T) {
 
 func BenchmarkGetnth(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Getnth(i)
+		Getnth(38)
 	}
 }

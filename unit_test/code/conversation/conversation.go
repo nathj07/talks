@@ -20,7 +20,9 @@ func GreetingV2(greeting string) string {
 }
 
 // Extras for demo
-/*case "Hello":
+/*case "Hello, old friend":
+	return "Good to see you again"
+case "Hello":
 	return "How may I help you?"
 case "Bonjour":
 	return "Salut"
