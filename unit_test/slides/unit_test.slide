@@ -20,8 +20,16 @@ ndavies@turnitin.com
 - Test Code
 - Code to test
 - Will drop to my shell run tests
-- COVER THE BASICS - the code file and the _test.go file
+- COVER THE BASICS - the code file and the _test.go file; the tesing.T, .B, and .M
 
+* My Typical Workflow
+- Intial code
+- Basic test
+- More tests, more code
+- check the coverage as I go
+- For bugs it's test to prove the fail
+- Code to pass the test e.g. my work on govalidator
+- -test.run=TestName - to run a single test case
 
 * Some TDD 
 .code ../code/conversation/conversation_test.go /^func TestGreeting/,/^}/
@@ -65,23 +73,18 @@ ndavies@turnitin.com
 - Tests are faster to write
 - Bugs are easier to prove and fix (_demo_)
 
+* Interfaces
+- You should be using interfaces in you Go code
+- These enable you to write mocks in your code very easily
+TODO CODE with an interface
+
+* Interface in test
+TODO test agains the interface use Twitter API
+
 * Coverage
 - easy to see what code is being tested and what is not
 - -cover shows the percentage of code covered by tests
 - to the console!
-
-* My Typical Workflow
-- Intial code
-- Basic test
-- More tests, more code
-- check the coverage as I go
-- For bugs it's test to prove the fail
-- Code to pass the test e.g. my work on govalidator
-- -test.run=TestName - to run a single test case
-
-* NEXT
-- Benchmarking
-- Example Tests
 
 * Benchmarking
 - Built in to the language
@@ -95,15 +98,10 @@ ndavies@turnitin.com
 * The Benchmark
 .code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnth/,/^}/
 .code ../code/fibonacci/fibonacci.bench
-- Each tests looks further into the series
+- Each test looks further into the series
 - Could change the test to get only one position _demo_
 - This shows that we could implement some effeciencies to reduce time reaching further into the series.
 
-
-* TODO
-
-- Example Tests - super useful on Godoc
-- Use of Interfaces
 
 * Extra features 
 - you can use profiling on tests: -cpuprofile=test.prof
@@ -115,5 +113,7 @@ ndavies@turnitin.com
 - http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
 - Andrew Gerrand Stupid Gopher Tricks: https://www.youtube.com/watch?v=UECh7X07m6E
 - https://smartystreets.com/blog/tags/testing-in-go-series
+- http://nathanleclaire.com/blog/2015/10/10/interfaces-and-composition-for-effective-unit-testing-in-golang/
+- https://medium.com/@matryer/5-simple-tips-and-tricks-for-writing-unit-tests-in-golang-619653f90742
 
 * Q&A
