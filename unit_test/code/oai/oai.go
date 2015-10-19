@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+type Fetcher interface {
+	Fetch(url string) ([]byte, error)
+}
+
 type MDResult struct {
 	XMLName xml.Name   `xml:"OAI-PMH"`
 	Records []MDFormat `xml:"ListMetadataFormats>metadataFormat"`
@@ -17,6 +21,7 @@ type MDFormat struct {
 	Namespace string `xml:"metadataNamespace"`
 }
 
+// IMPLEMENT OMIT
 // implement the Fetcher Interface
 type OAIFetcher struct{}
 
@@ -33,6 +38,8 @@ func (of OAIFetcher) Fetch(url string) ([]byte, error) {
 type OAI struct {
 	OAIFetcher Fetcher // use the interface type to allow for injection
 }
+
+// IMPLEMENT OMIT
 
 func (oai OAI) FetchMetadataFormats(baseURL string) ([]MDFormat, error) {
 	// call Fetch

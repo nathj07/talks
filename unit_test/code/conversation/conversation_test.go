@@ -9,7 +9,7 @@ func TestGreeting(t *testing.T) {
 	}
 }
 
-// START FR_ES
+// FR_ES OMIT
 func TestGreetingV2Frech(t *testing.T) {
 	expected := "Salut, ça va ?"
 	if got := GreetingV2("Salut"); got != expected {
@@ -24,9 +24,9 @@ func TestGreetingV2Spanish(t *testing.T) {
 	}
 }
 
-// END FR_ES
+// FR_ES OMIT
 
-// START TABLE
+// TABLE OMIT
 var testTable = []struct {
 	tag      string // identify the test case
 	input    string
@@ -44,7 +44,7 @@ var testTable = []struct {
 	},
 }
 
-// END TABLE
+// TABLE OMIT
 
 func TestGreetingV2All(t *testing.T) {
 	for _, td := range testTable {

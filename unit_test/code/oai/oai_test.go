@@ -2,9 +2,6 @@ package oai
 
 import "testing"
 
-type mockFetcher struct {
-}
-
 var testResponse = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="http://www.worldsciencepublisher.org/journals/lib/pkp/xml/oai2.xsl" ?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
@@ -42,14 +39,21 @@ var testResponse = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 	</ListMetadataFormats>
 </OAI-PMH>`)
 
+// TESTMOCK OMIT
+type mockFetcher struct {
+}
+
 func (mf mockFetcher) Fetch(url string) ([]byte, error) {
 	return testResponse, nil
 }
 
+var oai = &OAI{
+	OAIFetcher: mockFetcher{}, // inject the mock
+}
+
+// TESTMOCK OMIT
+
 func TestFetchMetadataFormats(t *testing.T) {
-	oai := &OAI{
-		OAIFetcher: mockFetcher{}, // inject the mock
-	}
 	got, err := oai.FetchMetadataFormats("http://test.com")
 	if err != nil {
 		t.Errorf("Unepxted error from FetchMetadataFormats: %v", err)

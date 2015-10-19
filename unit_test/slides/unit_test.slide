@@ -31,7 +31,7 @@ ndavies@turnitin.com
 - Code to pass the test e.g. my work on govalidator
 - -test.run=TestName - to run a single test case
 
-* Some TDD 
+* Some TDD
 .code ../code/conversation/conversation_test.go /^func TestGreeting/,/^}/
 - Until the function is written this won't run
 - Once written we prove the function defintion - signature and body
@@ -39,12 +39,12 @@ ndavies@turnitin.com
 - t.Fatalf: Reports the error and _stops_ this test function
 - This is rudimentary, the very basis of red-to-green TDD
 
-* The App Advances 
+* The App Advances
 - Might be nice to have multi-lingual support
 - Be nice to have more complex replies
 
 * Take the TDD Path
-.code ../code/conversation/conversation_test.go /START FR_ES/,/END FR_ES/
+.code ../code/conversation/conversation_test.go /FR_ES/,/FR_ES/
 
 * Now the Function
 .code ../code/conversation/conversation.go /^func GreetingV2/,/^}/
@@ -60,7 +60,7 @@ ndavies@turnitin.com
 * Table Based Testing
 - Define a local scope test set
 - Typically a slice of structs covering the inputs and outputs
-.code ../code/conversation/conversation_test.go /START TABLE/,/END TABLE/
+.code ../code/conversation/conversation_test.go /TABLE/,/TABLE/
 
 * The Test
 .code ../code/conversation/conversation_test.go /^func TestGreetingV2All/,/^}/
@@ -73,18 +73,22 @@ ndavies@turnitin.com
 - Tests are faster to write
 - Bugs are easier to prove and fix (_demo_)
 
-* Interfaces
-- You should be using interfaces in you Go code
-- These enable you to write mocks in your code very easily
-TODO CODE with an interface
-
-* Interface in test
-TODO test agains the interface use Twitter API
-
 * Coverage
 - easy to see what code is being tested and what is not
 - -cover shows the percentage of code covered by tests
 - to the console!
+
+* Interfaces & Composition
+- You should be using interfaces in your Go code
+.code ../code/oai/oai.go /^type Fetcher interface/,/^}/
+.code ../code/oai/oai.go /IMPLEMENT/,/IMPLEMENT/
+
+* Interface in test
+- This enables you to mock componenets in your test
+.code ../code/oai/oai_test.go /TESTMOCK/,/TESTMOCK/
+- Test focusses on handling the response
+- Test runs without internet connection
+- We don't spam a live server
 
 * Benchmarking
 - Built in to the language
@@ -102,12 +106,19 @@ TODO test agains the interface use Twitter API
 - Could change the test to get only one position _demo_
 - This shows that we could implement some effeciencies to reduce time reaching further into the series.
 
-
 * Extra features 
+- Since Go 1.4 there is TestMain() a suite level setup method
+- one per package
+- can handle suite level set-up and teardown
+- cannot use defer as it using os.Exit()
 - you can use profiling on tests: -cpuprofile=test.prof
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
+
+* More Advanced & Libraries
+- Test runners. TODO: Consider this - either add in properly somewhere or remove
 - Libraries like go-convey and gocheck are worth exploring, I've tried gocheck and found I don't need it.
 - I do use testify/mock for asserting functions were called, though I could live without it.
+- When tests don't pass reach for godebug - maybe another session on this.
 
 * References
 - http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
