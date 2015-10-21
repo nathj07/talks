@@ -10,34 +10,35 @@ ndavies@turnitin.com
 * Scene Setting
 - Very contrived code!
 - Standard library only; testing package
-- Start simple
-- Refactor
 - Table Based Tests
 - Coverage
+- Interfaces and Composition
 - Benchmarking
 
-* Using the Standard Library
-- Test Code
-- Code to test
-- Will drop to my shell run tests
-- COVER THE BASICS - the code file and the _test.go file; the tesing.T, .B, and .M
+* Primer
+- Testing package is part of the standard library
+- '_test.go' file name
+- testing.T - most tests take this
+- testing.B - benchmarks take this
+- testing.M - TestMain (since Go 1.4) takes this
+- t.Errorf: Allows the error to be reported but the code to continue in _this_ test function
+- t.Fatalf: Reports the error and _stops_ this test function
 
 * My Typical Workflow
 - Intial code
 - Basic test
 - More tests, more code
 - check the coverage as I go
-- For bugs it's test to prove the fail
+- **Bugs* it's test to prove the fail
 - Code to pass the test e.g. my work on govalidator
 - -test.run=TestName - to run a single test case
 
-* Some TDD
+* Some TDD - Red to Green!
 .code ../code/conversation/conversation_test.go /^func TestGreeting/,/^}/
 - Until the function is written this won't run
 - Once written we prove the function defintion - signature and body
-- t.Errorf: Allows the error to be reported but the code to continue in _this_ test function
-- t.Fatalf: Reports the error and _stops_ this test function
 - This is rudimentary, the very basis of red-to-green TDD
+.code ../code/conversation/conversation.go /^func Greeting/,/^}/
 
 * The App Advances
 - Might be nice to have multi-lingual support
@@ -65,15 +66,26 @@ ndavies@turnitin.com
 * The Test
 .code ../code/conversation/conversation_test.go /^func TestGreetingV2All/,/^}/
 
-* Benefits
+* It's a Bug!
+- Run a little demo!
+
+* Fixed!
+- prove the bug exists
+- fix the bug
+- prove it's fixed
+- confirm no regression
+
+* Benefits of TableBased Tests
 - Adding more language support = add a new struct
 - Test code is easy to read
 - Test output is clear
-- Coverage is clear from the code
+- Coverage is clear from the test code
 - Tests are faster to write
-- Bugs are easier to prove and fix (_demo_)
+- Bugs are easier to prove and fix
 
 * Coverage
+  go test -cover
+  go test -coverprofile="coverage.out"
 - easy to see what code is being tested and what is not
 - -cover shows the percentage of code covered by tests
 - to the console!
@@ -106,19 +118,19 @@ ndavies@turnitin.com
 - Could change the test to get only one position _demo_
 - This shows that we could implement some effeciencies to reduce time reaching further into the series.
 
-* Extra features 
-- Since Go 1.4 there is TestMain() a suite level setup method
-- one per package
-- can handle suite level set-up and teardown
+* Extra features
+- Since Go 1.4 there is TestMain() a package level setup method
+- can handle package level set-up and teardown
 - cannot use defer as it using os.Exit()
 - you can use profiling on tests: -cpuprofile=test.prof
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
+- play around with testing
 
 * More Advanced & Libraries
-- Test runners. TODO: Consider this - either add in properly somewhere or remove
 - Libraries like go-convey and gocheck are worth exploring, I've tried gocheck and found I don't need it.
-- I do use testify/mock for asserting functions were called, though I could live without it.
+- I do use testify/mock for asserting functions were called, and ensuring returns
 - When tests don't pass reach for godebug - maybe another session on this.
+- Test Runners - test table becomes a full test spec
 
 * References
 - http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go

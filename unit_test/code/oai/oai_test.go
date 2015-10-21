@@ -44,7 +44,7 @@ type mockFetcher struct {
 }
 
 func (mf mockFetcher) Fetch(url string) ([]byte, error) {
-	return testResponse, nil
+	return testResponse, nil // testResponse local []byte holding known good response
 }
 
 var oai = &OAI{
