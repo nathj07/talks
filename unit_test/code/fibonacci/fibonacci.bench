@@ -1,4 +1,4 @@
-go test -bench=".*"
+go test -bench=BenchmarkGetnthDepth
 PASS
-BenchmarkGetnth	  500000	    137014 ns/op
-ok  	github.com/nathj07/talks/unit_test/code/fibonacci	68.535s
+BenchmarkGetnthDepth	  500000	    129496 ns/op
+ok  	github.com/nathj07/talks/unit_test/code/fibonacci	64.776s

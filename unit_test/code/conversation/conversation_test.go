@@ -10,6 +10,22 @@ func TestGreeting(t *testing.T) {
 }
 
 // FR_ES OMIT
+func TestGreetingFrech(t *testing.T) {
+	expected := "Salut, ça va ?"
+	if got := Greeting("Salut"); got != expected {
+		t.Errorf("Expected: %s, Got: %s", expected, got)
+	}
+}
+
+func TestGreetingSpanish(t *testing.T) {
+	expected := "Hola, ¿Cómo estás?"
+	if got := Greeting("Hola"); got != expected {
+		t.Errorf("Expected: %s, Got: %s", expected, got)
+	}
+}
+
+// FR_ES OMIT
+
 func TestGreetingV2Frech(t *testing.T) {
 	expected := "Salut, ça va ?"
 	if got := GreetingV2("Salut"); got != expected {
@@ -23,8 +39,6 @@ func TestGreetingV2Spanish(t *testing.T) {
 		t.Errorf("Expected: %s, Got: %s", expected, got)
 	}
 }
-
-// FR_ES OMIT
 
 // TABLE OMIT
 var testTable = []struct {

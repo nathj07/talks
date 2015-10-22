@@ -20,7 +20,13 @@ func TestGetnth(t *testing.T) {
 	}
 }
 
-func BenchmarkGetnth(b *testing.B) {
+func BenchmarkGetnthDepth(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Getnth(i)
+	}
+}
+
+func BenchmarkGetnthSingle(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Getnth(38)
 	}

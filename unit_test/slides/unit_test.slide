@@ -1,6 +1,6 @@
-Unit Testing
+Testing the "Standard" Way
 27 Oct 2015
-Tags: go meetup, unit testing, standard library, go northeast
+Tags: go meetup, unit testing, standard library, go northeast, golang northeast
 
 Nathan Davies
 Software Engineer, Turnitin
@@ -8,8 +8,8 @@ ndavies@turnitin.com
 @nathj07
 
 * Scene Setting
-- Very contrived code!
 - Standard library only; testing package
+- Very contrived code!
 - Table Based Tests
 - Coverage
 - Interfaces and Composition
@@ -18,11 +18,14 @@ ndavies@turnitin.com
 * Primer
 - Testing package is part of the standard library
 - '_test.go' file name
-- testing.T - most tests take this
-- testing.B - benchmarks take this
-- testing.M - TestMain (since Go 1.4) takes this
+- testing.T
+  func TestSomeFunc (t *testing.T)
 - t.Errorf: Allows the error to be reported but the code to continue in _this_ test function
 - t.Fatalf: Reports the error and _stops_ this test function
+- testing.B
+  func BenchmarkSomeFunc (t *testing.B)
+- testing.M - TestMain (since Go 1.4), has a gotcha or 2
+  func TestMain (t *testing.M)
 
 * My Typical Workflow
 - Intial code
@@ -30,14 +33,18 @@ ndavies@turnitin.com
 - More tests, more code
 - check the coverage as I go
 - **Bugs* it's test to prove the fail
-- Code to pass the test e.g. my work on govalidator
-- -test.run=TestName - to run a single test case
+- code to pass the test e.g. my work on govalidator
+- run a single test
+  go test -test.run=TestName
+
+* Conversation App (contrived code warning)
 
 * Some TDD - Red to Green!
+  conversation_test.go
 .code ../code/conversation/conversation_test.go /^func TestGreeting/,/^}/
-- Until the function is written this won't run
-- Once written we prove the function defintion - signature and body
+- It proves the required function definition
 - This is rudimentary, the very basis of red-to-green TDD
+  conversation.go
 .code ../code/conversation/conversation.go /^func Greeting/,/^}/
 
 * The App Advances
@@ -46,15 +53,17 @@ ndavies@turnitin.com
 
 * Take the TDD Path
 .code ../code/conversation/conversation_test.go /FR_ES/,/FR_ES/
+  go test -run.test=TestGreeting[FS]
 
 * Now the Function
 .code ../code/conversation/conversation.go /^func GreetingV2/,/^}/
-- The tests will pass - check it out with go test -v
-- More languages = more test cases. Very tedious
+- The tests will pass:
+  go test -test.run=TestGreetingV2[FS] -v
 
 * Refactor
 - The previous tests are beneficial
 - Also very repetitive
+- More languages = more test cases. Very tedious
 - Be better to have less repetition in tests
 - Be nice if it were easier to add tests
 
@@ -96,11 +105,13 @@ ndavies@turnitin.com
 .code ../code/oai/oai.go /IMPLEMENT/,/IMPLEMENT/
 
 * Interface in test
-- This enables you to mock componenets in your test
+- mock/fake components in your test
 .code ../code/oai/oai_test.go /TESTMOCK/,/TESTMOCK/
+  TO THE CODE!
 - Test focusses on handling the response
 - Test runs without internet connection
 - We don't spam a live server
+(could've used httptest - talk to me later)
 
 * Benchmarking
 - Built in to the language
@@ -109,21 +120,22 @@ ndavies@turnitin.com
 
 * The Test
 .code ../code/fibonacci/fibonacci_test.go /^func TestGetnth/,/^}
-
+   go test -test.run=TestGetnth
 
 * The Benchmark
-.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnth/,/^}/
+.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnthDepth/,/^}/
 .code ../code/fibonacci/fibonacci.bench
 - Each test looks further into the series
-- Could change the test to get only one position _demo_
+- Could change the test to get only one position
+  go test -bench="BenchmarkGetnthSingle"
 - This shows that we could implement some effeciencies to reduce time reaching further into the series.
 
-* Extra features
-- Since Go 1.4 there is TestMain() a package level setup method
-- can handle package level set-up and teardown
-- cannot use defer as it using os.Exit()
-- you can use profiling on tests: -cpuprofile=test.prof
+* Extra Features
+- you can use profiling on tests:
+   go test -cpuprofile=test.prof
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
+   go test -race
+- httptest - implement a test server for serving responses; come talk to me
 - play around with testing
 
 * More Advanced & Libraries
@@ -138,5 +150,6 @@ ndavies@turnitin.com
 - https://smartystreets.com/blog/tags/testing-in-go-series
 - http://nathanleclaire.com/blog/2015/10/10/interfaces-and-composition-for-effective-unit-testing-in-golang/
 - https://medium.com/@matryer/5-simple-tips-and-tricks-for-writing-unit-tests-in-golang-619653f90742
+- https://github.com/nathj07/talks/unit_test - for all code and slides
 
 * Q&A
