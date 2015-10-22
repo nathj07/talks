@@ -53,7 +53,7 @@ ndavies@turnitin.com
 
 * Take the TDD Path
 .code ../code/conversation/conversation_test.go /FR_ES/,/FR_ES/
-  go test -run.test=TestGreeting[FS]
+  go test -test.run=TestGreeting[FS]
 
 * Now the Function
 .code ../code/conversation/conversation.go /^func GreetingV2/,/^}/
@@ -129,6 +129,14 @@ ndavies@turnitin.com
 - Could change the test to get only one position
   go test -bench="BenchmarkGetnthSingle"
 - This shows that we could implement some effeciencies to reduce time reaching further into the series.
+
+* Highlights / Why I love Go testing
+- only Go code
+- coverage
+- benchmarks
+- flexible tool chain
+   go test -help
+
 
 * Extra Features
 - you can use profiling on tests:
