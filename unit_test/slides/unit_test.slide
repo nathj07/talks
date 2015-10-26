@@ -27,8 +27,8 @@ ndavies@turnitin.com
 - testing.M - TestMain (since Go 1.4), has a gotcha or 2
   func TestMain (t *testing.M)
 
-* My Typical Workflow
-- Intial code
+* My Typical Work-flow
+- Initial code
 - Basic test
 - More tests, more code
 - check the coverage as I go
@@ -67,7 +67,7 @@ ndavies@turnitin.com
 - Be better to have less repetition in tests
 - Be nice if it were easier to add tests
 
-* Table Based Testing
+* Table-Driven Testing
 - Define a local scope test set
 - Typically a slice of structs covering the inputs and outputs
 .code ../code/conversation/conversation_test.go /TABLE/,/TABLE/
@@ -84,7 +84,7 @@ ndavies@turnitin.com
 - prove it's fixed
 - confirm no regression
 
-* Benefits of TableBased Tests
+* Benefits of Table-Driven Tests
 - Adding more language support = add a new struct
 - Test code is easy to read
 - Test output is clear
@@ -97,10 +97,10 @@ ndavies@turnitin.com
   go test -coverprofile="coverage.out"
 - easy to see what code is being tested and what is not
 - -cover shows the percentage of code covered by tests
-- to the console!
+- to the console! (and the browser)
 
 * Interfaces & Composition
-- You should be using interfaces in your Go code
+- Very useful in testing...
 .code ../code/oai/oai.go /^type Fetcher interface/,/^}/
 .code ../code/oai/oai.go /IMPLEMENT/,/IMPLEMENT/
 
@@ -108,7 +108,7 @@ ndavies@turnitin.com
 - mock/fake components in your test
 .code ../code/oai/oai_test.go /TESTMOCK/,/TESTMOCK/
   TO THE CODE!
-- Test focusses on handling the response
+- Test focuses on handling the response
 - Test runs without internet connection
 - We don't spam a live server
 (could've used httptest - talk to me later)
@@ -121,14 +121,17 @@ ndavies@turnitin.com
 * The Test
 .code ../code/fibonacci/fibonacci_test.go /^func TestGetnth/,/^}
    go test -test.run=TestGetnth
+- run all benchmarks in one go:
+  go test -bench=.
 
 * The Benchmark
-.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGetnthDepth/,/^}/
+.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGet50th/,/^}/
+  go test -bench="BenchmarkGet"
 .code ../code/fibonacci/fibonacci.bench
-- Each test looks further into the series
-- Could change the test to get only one position
-  go test -bench="BenchmarkGetnthSingle"
-- This shows that we could implement some effeciencies to reduce time reaching further into the series.
+- Anti-pattern Warning
+  go test -bench="BenchmarkAntipattern"
+- This shows that we could implement some efficiencies
+
 
 * Highlights / Why I love Go testing
 - only Go code
@@ -136,7 +139,6 @@ ndavies@turnitin.com
 - benchmarks
 - flexible tool chain
    go test -help
-
 
 * Extra Features
 - you can use profiling on tests:
@@ -150,7 +152,7 @@ ndavies@turnitin.com
 - Libraries like go-convey and gocheck are worth exploring, I've tried gocheck and found I don't need it.
 - I do use testify/mock for asserting functions were called, and ensuring returns
 - When tests don't pass reach for godebug - maybe another session on this.
-- Test Runners - test table becomes a full test spec
+- Test Runners - an iteration on table-driven testing
 
 * References
 - http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go

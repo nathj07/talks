@@ -20,14 +20,32 @@ func TestGetnth(t *testing.T) {
 	}
 }
 
-func BenchmarkGetnthDepth(b *testing.B) {
+func BenchmarkAntiPattern(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Getnth(i)
 	}
 }
 
-func BenchmarkGetnthSingle(b *testing.B) {
+func BenchmarkGet1st(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Getnth(38)
+		Getnth(1)
+	}
+}
+
+func BenchmarkGet10th(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Getnth(10)
+	}
+}
+
+func BenchmarkGet50th(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Getnth(50)
+	}
+}
+
+func BenchmarkGet100th(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Getnth(100)
 	}
 }
