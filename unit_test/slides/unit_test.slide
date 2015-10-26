@@ -10,7 +10,7 @@ ndavies@turnitin.com
 * Scene Setting
 - Standard library only; testing package
 - Very contrived code!
-- Table Based Tests
+- Table-Driven Tests
 - Coverage
 - Interfaces and Composition
 - Benchmarking
@@ -121,16 +121,18 @@ ndavies@turnitin.com
 * The Test
 .code ../code/fibonacci/fibonacci_test.go /^func TestGetnth/,/^}
    go test -test.run=TestGetnth
-- run all benchmarks in one go:
-  go test -bench=.
 
 * The Benchmark
 .code ../code/fibonacci/fibonacci_test.go /^func BenchmarkGet50th/,/^}/
   go test -bench="BenchmarkGet"
 .code ../code/fibonacci/fibonacci.bench
-- Anti-pattern Warning
-  go test -bench="BenchmarkAntipattern"
 - This shows that we could implement some efficiencies
+- run all benchmarks in one go:
+  go test -bench=.
+
+* Benchmark Anit-Pattern
+- Anti-pattern Warning
+  .code ../code/fibonacci/fibonacci_test.go /^func BenchmarkAntiPattern/./^}/
 
 
 * Highlights / Why I love Go testing
