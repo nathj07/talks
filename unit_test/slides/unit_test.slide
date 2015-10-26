@@ -130,9 +130,9 @@ ndavies@turnitin.com
 - run all benchmarks in one go:
   go test -bench=.
 
-* Benchmark Anit-Pattern
+* Benchmark Anti-Pattern
 - Anti-pattern Warning
-  .code ../code/fibonacci/fibonacci_test.go /^func BenchmarkAntiPattern/./^}/
+.code ../code/fibonacci/fibonacci_test.go /^func BenchmarkAntiPattern/,/^}/
 
 
 * Highlights / Why I love Go testing
@@ -148,6 +148,7 @@ ndavies@turnitin.com
 - race - useful for finding some potential race conditions, particularly helpful in highly concurrent, long running applications
    go test -race
 - httptest - implement a test server for serving responses; come talk to me
+- example tests - these then come up as example code snippets in the doc
 - play around with testing
 
 * More Advanced & Libraries
