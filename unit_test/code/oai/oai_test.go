@@ -97,6 +97,12 @@ func TestFetchMetadataFormats(t *testing.T) {
 		if format.Namespace != expected[i].Namespace {
 			t.Errorf("Test %d. Unexpected Namespace: %s, expected: %s", i, format.Namespace, expected[i].Namespace)
 		}
+		// could replace all the above if with a reflect.DeepEquals call:
+		/*
+			if !reflect.DeepEqual(format, expected[i]) {
+				t.Errorf("Mismatched format record:\nexp:%+v\ngot:%+v", expected[i], format)
+			}
+		*/
 	}
 
 }
