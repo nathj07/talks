@@ -56,6 +56,16 @@ var testTable = []struct {
 		input:    "Hola",
 		expected: "Hola, ¿Cómo estás?",
 	},
+	{
+		tag:      "English Informal",
+		input:    "Hello, old friend",
+		expected: "Good to see you again",
+	},
+	{
+		tag:      "Default",
+		input:    "Good morning",
+		expected: "Good morning",
+	},
 }
 
 // TABLE OMIT

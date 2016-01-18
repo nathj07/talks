@@ -1,0 +1,100 @@
+Concurrency at Turnitin
+26 Jan 2016
+Tags: go meetup, concurrency, semaphore, worker pools, go northeast, golang northeast, graceful shutdown
+
+Nathan Davies
+Software Engineer, Turnitin
+ndavies@turnitin.com
+@nathj07
+
+* Scene Setting
+- Not a theoretical walkthrough; see the resources slide
+- How we use concurrency at Turnitin; focussed on one major application
+- real world examples
+- cautionary tales
+
+* Rate limiting
+- go routines are easy to use
+- go routines are pretty lightweight
+- go routines can consume resources beyond your own system; size worker pools with that in mind
+
+* Worker Pools
+	// md is a slice of data to process
+	for i := 0; i < len(md); i++ {
+		m := md[i]
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			...
+		}()
+	}
+	wg.Wait()
+- unsuitable limits
+- the rate is controlled by the for loop
+-  `len(md)`  is unknown ahead of time
+- a cautionary tale
+
+* Worker Pools cont'd
+- need to have a controlled, deterministic number of workers
+	// md is a slice of data to process
+	workerCount := 20 // better from config
+	for i := 0; i < workerCount; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for record := range mds {
+				// do the work
+			}
+		}()
+	}
+	wg.Wait()
+- impact on external resource is now known and managed
+- WaitGroup allows us to ensure certain tasks are complete
+
+* Channels: Buffered v Unbuffered
+.play ../code/basic/concurrency.go /^func main/,/^}/
+- unbuffered you need something to recevie off before send on _demo_
+- buffered seems tempting; leads to the question "How big"
+
+* Batch Flow v Continuous Flow
+- processing data can process batches or a continuous flow
+- batch means pulling data; processing it all; pulling more - buffered channel
+- continuous means pulling data all the time - unbuffered chancel
+
+* Batch Flow example
+func Start(){
+	for {
+		select {
+		case <-m.quit:
+			// more on this later
+			return
+		default:
+			// Reset done channels on each iteration of the application.
+			// They are sent on when the corresponding channels are drained
+			m.doneProvider = make(chan struct{}, 1)
+			m.doneItem = make(chan struct{}, 1)
+			go m.fetchSet()
+			go m.dispatchProvider()
+			m.dispatchItem()
+		}
+	}
+}
+* Continuous Flow Example
+
+
+
+* Controlling Flow
+- select
+- wait groups
+- parrallelise different actions
+- run the same task multiple times on dofferent data
+
+* Example
+- TODO : Waitgroup example
+* Worker Pools
+ - good for repetitve, independent tasks
+ - can run multiple, distinct pools simultaneously
+
+
+* Resources
