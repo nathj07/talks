@@ -60,41 +60,40 @@ ndavies@turnitin.com
 * Batch Flow v Continuous Flow
 - processing data can process batches or a continuous flow
 - batch means pulling data; processing it all; pulling more - buffered channel
-- continuous means pulling data all the time - unbuffered chancel
+- continuous means pulling data all the time - unbuffered channel
 
 * Batch Flow example
-func Start(){
-	for {
-		select {
-		case <-m.quit:
-			// more on this later
-			return
-		default:
-			// Reset done channels on each iteration of the application.
-			// They are sent on when the corresponding channels are drained
-			m.doneProvider = make(chan struct{}, 1)
-			m.doneItem = make(chan struct{}, 1)
-			go m.fetchSet()
-			go m.dispatchProvider()
-			m.dispatchItem()
-		}
-	}
-}
+.code ../code/batch/flow.go  /^func main/,/^}/
+- _to_the_terminal_
+- very deterministic
+- memory will saw-tooth; especially if do more than print!
+- _to_the_code_
+
 * Continuous Flow Example
+.code ../code/continuous/flow.go  /^func main/,/^}/
+- _to_the_terminal_
+- At Tii we switched from batch to continuous flow
+- smoother resource use
+- better processing rates, not so much blocking
+- _to_the_code_
 
+* The Story So Far
+- `WaitGroup` to control flow
+- Parrallelised different actions -  multiple `go routine`
+- Run the same task mulitple times on different data - worker pool
+- Used `chan` to share memory by communicating
+- A lot of concurrency primitives used
 
-
-* Controlling Flow
-- select
-- wait groups
-- parrallelise different actions
-- run the same task multiple times on dofferent data
+* Up Next
+- `select`
+- done signals and graceful shutdown
 
 * Example
-- TODO : Waitgroup example
-* Worker Pools
- - good for repetitve, independent tasks
- - can run multiple, distinct pools simultaneously
-
+// TODO: For done use the exmaple https://blog.golang.org/pipelines within the continuous flow code - copy it and add the signal
 
 * Resources
+- https://blog.golang.org/share-memory-by-communicating
+- https://www.youtube.com/watch?v=cN_DpYBzKso - Rob Pike
+- https://gobyexample.com/goroutines - great launch point
+- http://spinroot.com/courses/summer/Papers/hoare_1978.pdf - if you really want the nuts and bolts
+- https://blog.golang.org/pipelines - pipelines are a great pattern; read and play
