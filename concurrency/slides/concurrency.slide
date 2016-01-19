@@ -5,15 +5,17 @@ Tags: go meetup, concurrency, semaphore, worker pools, go northeast, golang nort
 Nathan Davies
 Software Engineer, Turnitin
 ndavies@turnitin.com
+github.com/nathj07
 @nathj07
 
 * Scene Setting
 - Not a theoretical walkthrough; see the resources slide
-- How we use concurrency at Turnitin; focussed on one major application
+- How we use concurrency at Turnitin
 - real world examples
 - cautionary tales
 
 * Rate limiting
+- the export app; a cautionary tale
 - go routines are easy to use
 - go routines are pretty lightweight
 - go routines can consume resources beyond your own system; size worker pools with that in mind
@@ -30,10 +32,9 @@ ndavies@turnitin.com
 		}()
 	}
 	wg.Wait()
-- unsuitable limits
 - the rate is controlled by the for loop
+- unsuitable limits
 -  `len(md)`  is unknown ahead of time
-- a cautionary tale
 
 * Worker Pools cont'd
 - need to have a controlled, deterministic number of workers
@@ -58,31 +59,31 @@ ndavies@turnitin.com
 - buffered seems tempting; leads to the question "How big"
 
 * Batch Flow v Continuous Flow
+- continues the discussion on buffered v unbuffered
 - processing data can process batches or a continuous flow
-- batch means pulling data; processing it all; pulling more - buffered channel
+- batch means pulling data; processing it all; and repeat - buffered channel
 - continuous means pulling data all the time - unbuffered channel
 
 * Batch Flow example
 .code ../code/batch/flow.go  /^func main/,/^}/
-- _to_the_terminal_
 - very deterministic
-- memory will saw-tooth; especially if do more than print!
-- _to_the_code_
+- resource use fluctuates
+- _demo_and_code_
 
 * Continuous Flow Example
 .code ../code/continuous/flow.go  /^func main/,/^}/
-- _to_the_terminal_
 - At Tii we switched from batch to continuous flow
 - smoother resource use
 - better processing rates, not so much blocking
-- _to_the_code_
+- tasks are more interleaved
+- _demo_and_code_
 
 * The Story So Far
+- A lot of concurrency primitives used
 - `WaitGroup` to control flow
-- Parrallelised different actions -  multiple `go routine`
+- Parrallelised different actions -  `go routine`
 - Run the same task mulitple times on different data - worker pool
 - Used `chan` to share memory by communicating
-- A lot of concurrency primitives used
 
 * Up Next
 - `select`
@@ -97,3 +98,4 @@ ndavies@turnitin.com
 - https://gobyexample.com/goroutines - great launch point
 - http://spinroot.com/courses/summer/Papers/hoare_1978.pdf - if you really want the nuts and bolts
 - https://blog.golang.org/pipelines - pipelines are a great pattern; read and play
+- http://jmoiron.net/blog/limiting-concurrency-in-go/
