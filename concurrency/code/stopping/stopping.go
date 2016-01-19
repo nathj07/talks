@@ -18,20 +18,28 @@ type Provider struct {
 }
 
 var providerChan chan *Provider
+var done chan struct{}
 
 func main() {
 	db := common.GetDBConnection()
-
-	providerChan = make(chan *Provider) // unbuffered
+	providerChan = make(chan *Provider) // unbuffered data chan
+	done = make(chan struct{})          // unbuffered control chans
 	// fetch data
 	go fetchData(db)
-	// blocking calls
-	useData()
-	// useDataWorkerPool() // using a worker pool to interleave the tasks
+	go useData()
+	// blocking call
+	stop()
+}
+
+func stop() {
+	fmt.Println("Blocked in stop")
+	<-done // indicates we have drained the channel and can safely stop
+	fmt.Println("Stopping")
+	return
 }
 
 func fetchData(db *sql.DB) {
-	// bounded loop to simulate repeated fetches
+	defer close(providerChan)
 	for i := 0; i <= 1; i++ {
 		fmt.Println("Iteration ", i)
 		fmt.Println("Fetch Data from DB")
@@ -50,30 +58,16 @@ func fetchData(db *sql.DB) {
 			providerChan <- p
 		}
 	}
-	close(providerChan) // artificial closure for the demo
 }
 
-func useData() {
-	for p := range providerChan {
-		func() {
-			fmt.Printf("Read from chan: %q, %q\n", p.name, p.url)
-			resp, err := http.Head(p.url)
-			if err != nil {
-				fmt.Printf("Error making head request for %q: %v\n", p.url, err)
-				return
-			}
-			defer resp.Body.Close()
-			fmt.Printf("Processing Data: %q\t%v\n", p.name, resp)
-		}()
-	}
-
-}
-
-// useDataWorkerPool will read until the chan is close but it will read items concurrently and the
+// useData will read until the chan is closed but it will read items concurrently and the
 // work is controlled with a loop acting as a pool and a WaitGroup to ensure it all finishes before we return.
-func useDataWorkerPool() {
+func useData() {
+	defer func() {
+		done <- struct{}{}
+	}()
 	var wg sync.WaitGroup
-	concurrencyRate := 5 // in the wild you'd use a config variable for this
+	concurrencyRate := 10 // in the wild you'd use a config variable for this
 	for i := 0; i <= concurrencyRate; i++ {
 		fmt.Println("Worker ", i)
 		wg.Add(1)

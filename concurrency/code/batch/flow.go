@@ -28,8 +28,8 @@ func main() {
 		providerChan = make(chan *Provider, 10) // buffered chan as we know the amount of data
 		go fetchData(db)
 		//blocking calls
-		useData() // task order is more deterministic
-		//useDataWorkerPool() // tasks are more interleaved
+		//useData() // task order is more deterministic
+		useDataWorkerPool() // tasks are more interleaved
 	}
 }
 
@@ -40,16 +40,12 @@ func fetchData(db *sql.DB) {
 		log.Fatalf("Error fetching data: %v", err)
 	}
 	defer rows.Close()
-	provs := []*Provider{}
 	for rows.Next() {
 		p := &Provider{}
 		if err := rows.Scan(&p.name, &p.url); err != nil {
 			fmt.Printf("Error in scan: %v", err)
 			continue
 		}
-		provs = append(provs, p)
-	}
-	for _, p := range provs {
 		fmt.Printf("Write to chan: %q\n", p.name)
 		providerChan <- p
 	}
@@ -72,7 +68,7 @@ func useData() {
 	}
 }
 
-// useDataWorkerPool will read until the chan is close but it will read items concurrently and the
+// useDataWorkerPool will read until the chan is closed but it will read items concurrently and the
 // work is controlled with a loop acting as a pool and a WaitGroup to ensure it all finishes before we return.
 func useDataWorkerPool() {
 	var wg sync.WaitGroup
