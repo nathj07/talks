@@ -26,16 +26,17 @@ var done chan struct{}
 
 func main() {
 	db := common.GetDBConnection()
+	// NOTIFY OMIT
 	providerChan = make(chan *Provider) // unbuffered data chan
 	quit = make(chan struct{})          // unbuffered control chans
 	done = make(chan struct{})
-	// fetch data
 	go fetchData(db)
 	go useData()
 	sig := make(chan os.Signal)
 	signal.Notify(sig, syscall.SIGINT)
 	<-sig
 	stop()
+	// NOTIFY OMIT
 }
 
 func stop() {

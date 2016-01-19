@@ -5,22 +5,22 @@ Tags: go meetup, concurrency, semaphore, worker pools, go northeast, golang nort
 Nathan Davies
 Software Engineer, Turnitin
 ndavies@turnitin.com
-github.com/nathj07
+http://github.com/nathj07
 @nathj07
 
 * Scene Setting
 - Not a theoretical walkthrough; see the resources slide
 - How we use concurrency at Turnitin
-- real world examples
-- cautionary tales
+- Real world examples
+- A cautionary tale
 
 * Rate limiting
-- the export app; a cautionary tale
+- The export app; a cautionary tale
 - go routines are easy to use
 - go routines are pretty lightweight
-- go routines can consume resources beyond your own system; size worker pools with that in mind
+- A naive Worker Pool
 
-* Worker Pools
+* Worker Pool - Naive
 	// md is a slice of data to process
 	for i := 0; i < len(md); i++ {
 		m := md[i]
@@ -35,10 +35,11 @@ github.com/nathj07
 - the rate is controlled by the for loop
 - unsuitable limits
 -  `len(md)`  is unknown ahead of time
+- go routines can consume resources beyond your own system; size worker pools with that in mind
 
-* Worker Pools cont'd
+* Worker Pools - Better
 - need to have a controlled, deterministic number of workers
-	// md is a slice of data to process
+	// mds is a channel of data to process
 	workerCount := 20 // better from config
 	for i := 0; i < workerCount; i++ {
 		wg.Add(1)
@@ -55,7 +56,7 @@ github.com/nathj07
 
 * Channels: Buffered v Unbuffered
 .play ../code/basic/concurrency.go /^func main/,/^}/
-- unbuffered you need something to recevie off before send on _demo_
+- unbuffered you need something to recevie off before send on
 - buffered seems tempting; leads to the question "How big"
 
 * Batch Flow v Continuous Flow
@@ -67,7 +68,7 @@ github.com/nathj07
 * Batch Flow example
 .code ../code/batch/flow.go  /^func main/,/^}/
 - very deterministic
-- resource use fluctuates
+- resource use grows a lot initially, fluctuates around the peak, then drops
 - _demo_and_code_
 
 * Continuous Flow Example
@@ -88,21 +89,54 @@ github.com/nathj07
 * Up Next
 - done signals and graceful shutdown
 - `select`
+- `mutex`
 
 * Done Signal Example
 .code ../code/stopping/stopping.go  /^func main/,/^}/
 .code ../code/stopping/stopping.go  /^func stop/,/^}/
+- good for continuous flow
+- good for managing shutdown
 - _code_and_demo_
 
 * select and SIGINT
-.code ../code/sigint/sigint.go  /^func main/,/^}/
+.code ../code/sigint/sigint.go  /NOTIFY/,/NOTIFY//
 .code ../code/sigint/sigint.go  /FETCH/,/FETCH//
+- graceful shutdown on intereupt
+- good for long running apps
 - _code_and_demo_
 
-* Resources //TODO: Make this more clear explain each link
-- https://blog.golang.org/share-memory-by-communicating
-- https://www.youtube.com/watch?v=cN_DpYBzKso - Rob Pike
+* mutex
+- not used often
+- not needed for most concurrent applications
+- I use it to implement a cache with a go routine safe map
+
+* Mutex example
+	// mutex
+	var mu sync.Mutex
+	// standard map
+	dispatchedProviders := make(map[int]struct{})
+
+	// read from the map
+	mu.Lock()
+	_, dispatched := dispatchedProviders[p.ID]
+	mu.Unlock()
+
+	if dispatched {
+		// provider already dispatched; drop this one on the floor
+		continue
+	}
+	// write provider to the cache, this is removed when processing is finished in dispatchProvider
+	mu.Lock()
+	dispatchedProviders[p.ID] = struct{}{}
+	mu.Unlock()
+	providerChan <- p
+- real world snippet for preventing us from dispatching providers multiple times
+- useful under the continuous flow model
+
+* Resources
+- https://blog.golang.org/share-memory-by-communicating - good first read
 - https://gobyexample.com/goroutines - great launch point
-- http://spinroot.com/courses/summer/Papers/hoare_1978.pdf - if you really want the nuts and bolts
+- https://www.youtube.com/watch?v=cN_DpYBzKso - Rob Pike: concurrency is not parrallelism
 - https://blog.golang.org/pipelines - pipelines are a great pattern; read and play
 - http://jmoiron.net/blog/limiting-concurrency-in-go/
+- http://spinroot.com/courses/summer/Papers/hoare_1978.pdf - if you really want the nuts and bolts
