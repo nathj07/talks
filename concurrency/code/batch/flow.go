@@ -28,8 +28,8 @@ func main() {
 		providerChan = make(chan *Provider, 10) // buffered chan as we know the amount of data
 		go fetchData(db)
 		//blocking calls
-		//useData() // task order is more deterministic
-		useDataWorkerPool() // tasks are more interleaved
+		useData() // task order is more deterministic
+		//useDataWorkerPool() // tasks are more interleaved
 	}
 }
 

@@ -26,8 +26,8 @@ func main() {
 	// fetch data
 	go fetchData(db)
 	// blocking calls
-	//useData()
-	useDataWorkerPool() // using a worker pool to interleave the tasks
+	useData()
+	//useDataWorkerPool() // using a worker pool to interleave the tasks
 }
 
 func fetchData(db *sql.DB) {
