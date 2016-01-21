@@ -105,6 +105,26 @@ http://github.com/nathj07
 - good for long running apps
 - _code_and_demo_
 
+* select and sleeping
+- sometimes we need a controlled sleep in an app
+- deleting old files; we only want to walk the directory once every 12 hours
+	func (m *Manager) ClearOldItems() {
+		for {
+			// walk the ContentDir
+			if err := filepath.Walk(m.conf.ContentDir, m.clear); err != nil {
+				logrus.WithError(err).Debug("Application stopping")
+				return
+			}
+			select {
+			case <-m.quit:
+				logrus.Info("ClearOldItems, quit signal encountered")
+				return
+			case <-time.After(12 * time.Hour):
+			}
+		}
+	}
+- call this in a go routine
+
 * mutex
 - not used often
 - not needed for most concurrent applications
@@ -140,3 +160,4 @@ http://github.com/nathj07
 - https://blog.golang.org/pipelines - pipelines are a great pattern; read and play
 - http://jmoiron.net/blog/limiting-concurrency-in-go/
 - http://spinroot.com/courses/summer/Papers/hoare_1978.pdf - if you really want the nuts and bolts
+- http://www.thedotpost.com/2015/11/matt-aimonetti-applied-concurrency-in-go - applied concurrency
