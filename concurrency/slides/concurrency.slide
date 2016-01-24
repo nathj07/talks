@@ -41,6 +41,7 @@ http://github.com/nathj07
 - need to have a controlled, deterministic number of workers
 	// mds is a channel of data to process
 	workerCount := 20 // better from config
+	var wg sync.WaitGroup
 	for i := 0; i < workerCount; i++ {
 		wg.Add(1)
 		go func() {
@@ -83,7 +84,7 @@ http://github.com/nathj07
 - A lot of concurrency primitives used
 - `WaitGroup` to control flow and guarantee tasks finish
 - Parrallelised different actions via go routines
-- Run the same task mulitple times on different data - worker pool
+- Run the same task mulitple times simultaneously - worker pool
 - Used `chan` to share memory by communicating
 
 * Up Next
@@ -154,6 +155,7 @@ http://github.com/nathj07
 - useful under the continuous flow model
 
 * Resources
+- Use the race detector!
 - https://blog.golang.org/share-memory-by-communicating - good first read
 - https://gobyexample.com/goroutines - great launch point
 - https://www.youtube.com/watch?v=cN_DpYBzKso - Rob Pike: concurrency is not parrallelism

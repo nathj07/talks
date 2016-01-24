@@ -40,7 +40,7 @@ func main() {
 }
 
 func stop() {
-	quit <- struct{}{}
+	close(quit)
 	fmt.Println("Blocked in stop")
 	<-done // indicates we have drained the channel and can safely stop
 	fmt.Println("Stopping")
@@ -81,9 +81,7 @@ func fetchData(db *sql.DB) {
 // useData will read until the chan is closed but it will read items concurrently and the
 // work is controlled with a loop acting as a pool and a WaitGroup to ensure it all finishes before we return.
 func useData() {
-	defer func() {
-		done <- struct{}{}
-	}()
+	defer close(done)
 	var wg sync.WaitGroup
 	concurrencyRate := 10 // in the wild you'd use a config variable for this
 	for i := 0; i <= concurrencyRate; i++ {

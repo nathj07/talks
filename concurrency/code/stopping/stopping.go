@@ -23,7 +23,7 @@ var done chan struct{}
 func main() {
 	db := common.GetDBConnection()
 	providerChan = make(chan *Provider) // unbuffered data chan
-	done = make(chan struct{})          // unbuffered control chans
+	done = make(chan struct{})          // unbuffered control chan
 	// fetch data
 	go fetchData(db)
 	go useData()
@@ -64,7 +64,7 @@ func fetchData(db *sql.DB) {
 // work is controlled with a loop acting as a pool and a WaitGroup to ensure it all finishes before we return.
 func useData() {
 	defer func() {
-		done <- struct{}{}
+		done <- struct{}{} // alternatively defer close(done)
 	}()
 	var wg sync.WaitGroup
 	concurrencyRate := 10 // in the wild you'd use a config variable for this
