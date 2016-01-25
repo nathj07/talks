@@ -21,10 +21,10 @@ http://github.com/nathj07
 - A naive Worker Pool
 
 * Worker Pool - Naive
+	var wg sync.WaitGroup
 	// md is a slice of data to process
 	for i := 0; i < len(md); i++ {
 		m := md[i]
-
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -35,7 +35,8 @@ http://github.com/nathj07
 - the rate is controlled by the for loop
 - unsuitable limits
 -  `len(md)`  is unknown ahead of time
-- go routines can consume resources beyond your own system; size worker pools with that in mind
+- go routines DO consume resources
+- resource consumption can be beyond your own system
 
 * Worker Pools - Better
 - need to have a controlled, deterministic number of workers
@@ -86,6 +87,8 @@ http://github.com/nathj07
 - Parrallelised different actions via go routines
 - Run the same task mulitple times simultaneously - worker pool
 - Used `chan` to share memory by communicating
+- Building blocks for any highly performant app
+- Robust and easy to reason about
 
 * Up Next
 - done signals and graceful shutdown
