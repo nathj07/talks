@@ -1,0 +1,41 @@
+The Power of Middleware
+24 April 2018
+Tags: go meetup, unit testing, standard library, go northeast, golang northeast
+
+Nathan Davies
+Senior Software Engineer, Turnitin
+ndavies@turnitin.com
+@nathj07
+
+* Scene Setting
+- What? Why? How?
+- Simple Scenario
+- Code Dojo
+- Conclusion
+
+* What?
+"When we talk about Middleware in Go, at its simplest, we are really talking about running code before and/or after our handler code in a HTTP request lifecycle._"
+
+_Mat Ryer: https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81 _
+
+* Why?
+Typical examples include:
+- Logging
+- Timing
+- Distributed Tracing
+
+Writing these functions in middleware gives them to all handlers in your app
+
+* How?
+http.HandlerFunc()
+
+* Simple Scenario
+
+* Code Dojo
+
+
+* References
+- https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81
+- https://github.com/nathj07/talks/middleware - for all code and slides
+
+* Q&A
