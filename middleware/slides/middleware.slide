@@ -9,33 +9,72 @@ ndavies@turnitin.com
 
 * Scene Setting
 - What? Why? How?
-- Simple Scenario
 - Code Dojo
 - Conclusion
 
 * What?
-"When we talk about Middleware in Go, at its simplest, we are really talking about running code before and/or after our handler code in a HTTP request lifecycle._"
 
-_Mat Ryer: https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81 _
+"A Middleware is a type that wraps a handler to remove boilerplate or other concerns not direct to any given Handler."
+.link https://github.com/ardanlabs/service/blob/master/internal/platform/web/middleware.go#L3 William Kennedy
 
-* Why?
+
+"When we talk about Middleware in Go, at its simplest, we are really talking about running code before and/or after our handler code in a HTTP request lifecycle."
+.link https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81 Mat Ryer
+
+* Why? 
+
+Code sharing
+Retaining focus in handlers
+
 Typical examples include:
 - Logging
 - Timing
 - Distributed Tracing
 
-Writing these functions in middleware gives them to all handlers in your app
-
 * How?
-http.HandlerFunc()
 
-* Simple Scenario
+* Basic Server
+.code ../code/basic/main.go /^func main/,/^}/
+- Familiar with this, simple handler
+- Nothing special here
 
-* Code Dojo
+* Allowing Middleware
+Use a function that takes _and_ returns a `http.Handler`
+.code ../code/simplemw/main.go /^func logging/,/^}/
 
+* Applying Single Middleware
+.code ../code/simplemw/main.go /^func main/,/^}/
+- wrap the main handler in `logging()`
+- not sustainable for lots of middleware
+- let's play first!
+
+* Code Dojo Part 1
+- A basic webserver - clone my repo: TODO LINK TO WHAT SHOULD BE CLONED
+- Need to know when a `path` is requested and when it is served
+
+* Applying More Middleware
+TODO:
+Code on more middelware from advanced example
+Define one more so logging and timing
+Consider basic auth checking from url args for username - could be in the Dojo
+
+
+* Code Dojo Part 2
+The webserver now needs to:
+- log the request
+- track the time
+- check the username in the query string/header error if neither.
+- handle rudimentary tracing
+ e.g check for UUID in header, if not add, if there is log it and the new request
+
+* Extra packages
+A list of packages worth considering to make life easier:
+- TODO
+- Mux
+- Routers that sort of thing
 
 * References
-- https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81
-- https://github.com/nathj07/talks/middleware - for all code and slides
-
-* Q&A
+.link https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81
+.link https://gowebexamples.com/basic-middleware/
+.link https://gowebexamples.com/advanced-middleware/
+.link https://github.com/nathj07/talks/middleware https://github.com/nathj07/talks/middleware - for all code and slides
