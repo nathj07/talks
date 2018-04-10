@@ -34,7 +34,7 @@ Typical examples include:
 * How?
 
 * Basic Server
-.code ../code/basic/main.go /^func main/,/^}/
+.code ../code/basic/main.go /START OMIT/,/END OMIT/
 - Familiar with this, simple handler
 - Nothing special here
 
@@ -49,29 +49,42 @@ Use a function that takes _and_ returns a `http.Handler`
 - let's play first!
 
 * Code Dojo Part 1
-- A basic webserver - clone my repo: TODO LINK TO WHAT SHOULD BE CLONED
+- A basic webserver - clone the simple temaplate file: https://github.com/nathj07/mw_dojo_templates
 - Need to know when a `path` is requested and when it is served
 
+Now add more endpoints and handlers and see the middlware applied
+.image images/gophercises_punching.gif 300 600
+
+
 * Applying More Middleware
-TODO:
-Code on more middelware from advanced example
-Define one more so logging and timing
-Consider basic auth checking from url args for username - could be in the Dojo
+- not very scalable, wrapping each handler like that
+- can't realistically apply multiple middlewares in that manner
+- multiple middlewares can be applied
+- custom type, chainging function
+
+* Applying More Middleware - code snippet
+.code ../code/multiplemw/main.go /START OMIT/,/END OMIT/
+- the power of defining custom function type is really helpful here
+
+.code ../code/multiplemw/main.go /^func Chain/,/^}/
+- apply all of the middelware at once
 
 
 * Code Dojo Part 2
 The webserver now needs to:
-- log the request
+- log the request, including referrer if present
 - track the time
-- check the username in the query string/header error if neither.
+- check the username in the query string/header error if neither, else display friendly welcome
 - handle rudimentary tracing
  e.g check for UUID in header, if not add, if there is log it and the new request
 
-* Extra packages
-A list of packages worth considering to make life easier:
-- TODO
-- Mux
-- Routers that sort of thing
+Now add more endpoints and handlers and see the middlware applied
+.image images/gophercises_punching.gif 250 500
+
+* Concluding Remarks
+- Middleware is very powerful
+- Middleware is pretty simple
+- Try it out: opentracing, logging, authorisation etc
 
 * References
 .link https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81
