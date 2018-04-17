@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/hello", logging(hello))
-	http.HandleFunc("/goodbye", logging(goodbye))
+	http.HandleFunc("/hello", logging(helloGET))
+	http.HandleFunc("/goodbye", logging(goodbyeGET))
 
 	log.Println("App started, listening on port 8080")
 	http.ListenAndServe(":8080", nil)
@@ -18,11 +18,11 @@ func main() {
 // Handlers
 //
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func helloGET(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "hello")
 }
 
-func goodbye(w http.ResponseWriter, r *http.Request) {
+func goodbyeGET(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "goodbye")
 }
 

@@ -13,8 +13,8 @@ func main() {
 
 	middlewares := []Middleware{Logging(), Personalise(), Identification()}
 
-	http.HandleFunc("/hello", Chain(hello, middlewares))
-	http.HandleFunc("/goodbye", Chain(goodbye, middlewares))
+	http.HandleFunc("/hello", Chain(helloGET, middlewares))
+	http.HandleFunc("/goodbye", Chain(goodbyeGET, middlewares))
 
 	log.Println("App started, listening on port 8080")
 
@@ -25,11 +25,11 @@ func main() {
 // Handlers
 //
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func helloGET(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "hello")
 }
 
-func goodbye(w http.ResponseWriter, r *http.Request) {
+func goodbyeGET(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "goodbye")
 }
 

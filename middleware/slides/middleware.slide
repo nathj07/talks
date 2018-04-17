@@ -45,11 +45,10 @@ Use a function that takes _and_ returns a `http.Handler`
 * Applying Single Middleware
 .code ../code/simplemw/main.go /^func main/,/^}/
 - wrap the main handler in `logging()`
-- not sustainable for lots of middleware
-- let's play first!
+- let's play!
 
 * Code Dojo Part 1
-- A basic webserver - clone the simple temaplate file: https://github.com/nathj07/mw_dojo_templates
+- A basic webserver - clone the simple template file: https://github.com/nathj07/mw_dojo_templates
 - Need to know when a `path` is requested and when it is served
 
 Now add more endpoints and handlers and see the middleware applied
@@ -57,9 +56,9 @@ Now add more endpoints and handlers and see the middleware applied
 
 
 * Applying More Middleware
-- not very scalable, wrapping each handler like that
+- that simple approach is not very scalable
 - can't realistically apply multiple middlewares in that manner
-- multiple middlewares can be applied
+- BUT we need to apply multiple middlewares
 - custom type, chaining function
 
 * Applying More Middleware - code snippet
@@ -71,16 +70,16 @@ Now add more endpoints and handlers and see the middleware applied
 
 
 * Code Dojo Part 2
-The webserver now needs to:
+Possible extra middleware:
 
 - log the request, including referrer if present
 - track the time
 - check the username in the query string/header error if neither, else display friendly welcome
-- handle rudimentary tracing
- e.g check for UUID in header, if not add, if there is log it and the new request
+- handle rudimentary tracing e.g. UUID in the header
+- feel free to come up with your own
 - Now add more endpoints and handlers and see the middleware applied
 
-.image images/gophercises_punching.gif 250 500
+.image images/gophercises_punching.gif 125 250 
 
 * Code Dojo Part 3
 - utilise `r.Context` to pass values along
@@ -88,7 +87,7 @@ The webserver now needs to:
 .image images/gophercises_punching.gif 250 500
 
 * Unit testing
-https://medium.com/@PurdonKyle/unit-testing-golang-http-middleware-c7727ca896ea
+.link https://medium.com/@PurdonKyle/unit-testing-golang-http-middleware-c7727ca896ea
 
 - It's pretty simple, using `httptest.NewServer`
 - If there's time we can play with that idea too
