@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,10 +11,10 @@ import (
 
 func main() {
 
-	middlewares := []Middleware{Method("GET"), Logging()}
+	middlewares := []Middleware{Logging(), Personalise(), Identification()}
 
-	http.HandleFunc("/hello", Chain(hello, middlewares...))
-	http.HandleFunc("/goodbye", Chain(goodbye, middlewares...))
+	http.HandleFunc("/hello", Chain(hello, middlewares))
+	http.HandleFunc("/goodbye", Chain(goodbye, middlewares))
 
 	http.ListenAndServe(":8080", nil)
 }
@@ -33,54 +34,63 @@ func goodbye(w http.ResponseWriter, r *http.Request) {
 // Middleware defines the custom type for all our middleware funcs, useful for gathering them together
 // START OMIT
 type Middleware func(http.HandlerFunc) http.HandlerFunc
+
 // END OMIT
 // Logging logs all requests with its path and the time it took to process
 func Logging() Middleware {
-
-	// Create a new Middleware
 	return func(f http.HandlerFunc) http.HandlerFunc {
-
-		// Define the http.HandlerFunc
 		return func(w http.ResponseWriter, r *http.Request) {
-
-			// Do middleware things
 			start := time.Now()
-			defer func() { log.Println(r.URL.Path, time.Since(start)) }()
-
+			defer func() {
+				log.Println(r.URL.Path, time.Since(start))
+				log.Println("User", r.Context().Value(usernameKey))
+			}()
 			// Call the next middleware/handler in chain
 			f(w, r)
 		}
 	}
 }
 
-// Method ensures that url can only be requested with a specific method, else returns a 400 Bad Request
-func Method(m string) Middleware {
+type ctxKey int
 
-	// Create a new Middleware
+const (
+	usernameKey ctxKey = 1
+)
+
+// Identification checks for the  user name in the query string,
+// if present it adds it to the context for the logger and prints it on the page.
+func Identification() Middleware {
 	return func(f http.HandlerFunc) http.HandlerFunc {
-
-		// Define the http.HandlerFunc
 		return func(w http.ResponseWriter, r *http.Request) {
-
-			// Do middleware things
-			if r.Method != m {
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-				log.Printf("Method: %s unsupported for path %q\n", r.Method, r.URL.String())
-				return
+			ctx := r.Context()
+			user := r.FormValue("username")
+			if user == "" {
+				// nothing more to do here
+				f(w, r)
 			}
+			ctx = context.WithValue(ctx, usernameKey, user)
+			r = r.WithContext(ctx)
+			f(w, r)
+		}
+	}
+}
 
-			// Call the next middleware/handler in chain
+// Personalise uses the context and prints the username if found
+func Personalise() Middleware {
+	return func(f http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			if username := r.Context().Value(usernameKey); username != nil {
+				w.Write([]byte(fmt.Sprintf("User: %s\n", username)))
+			}
 			f(w, r)
 		}
 	}
 }
 
 // Chain applies middlewares to a http.HandlerFunc
-func Chain(f http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
+func Chain(f http.HandlerFunc, mw []Middleware) http.HandlerFunc {
 	for _, m := range middlewares {
 		f = m(f)
 	}
 	return f
 }
-
-

@@ -52,7 +52,7 @@ Use a function that takes _and_ returns a `http.Handler`
 - A basic webserver - clone the simple temaplate file: https://github.com/nathj07/mw_dojo_templates
 - Need to know when a `path` is requested and when it is served
 
-Now add more endpoints and handlers and see the middlware applied
+Now add more endpoints and handlers and see the middleware applied
 .image images/gophercises_punching.gif 300 600
 
 
@@ -60,26 +60,39 @@ Now add more endpoints and handlers and see the middlware applied
 - not very scalable, wrapping each handler like that
 - can't realistically apply multiple middlewares in that manner
 - multiple middlewares can be applied
-- custom type, chainging function
+- custom type, chaining function
 
 * Applying More Middleware - code snippet
 .code ../code/multiplemw/main.go /START OMIT/,/END OMIT/
 - the power of defining custom function type is really helpful here
 
 .code ../code/multiplemw/main.go /^func Chain/,/^}/
-- apply all of the middelware at once
+- apply all of the middleware at once
 
 
 * Code Dojo Part 2
 The webserver now needs to:
+
 - log the request, including referrer if present
 - track the time
 - check the username in the query string/header error if neither, else display friendly welcome
 - handle rudimentary tracing
  e.g check for UUID in header, if not add, if there is log it and the new request
+- Now add more endpoints and handlers and see the middleware applied
 
-Now add more endpoints and handlers and see the middlware applied
 .image images/gophercises_punching.gif 250 500
+
+* Code Dojo Part 3
+- utilise `r.Context` to pass values along
+- middleware ordering, play around with it and see the impact
+.image images/gophercises_punching.gif 250 500
+
+* Unit testing
+https://medium.com/@PurdonKyle/unit-testing-golang-http-middleware-c7727ca896ea
+
+- It's pretty simple, using `httptest.NewServer`
+- If there's time we can play with that idea too
+
 
 * Concluding Remarks
 - Middleware is very powerful
@@ -90,4 +103,5 @@ Now add more endpoints and handlers and see the middlware applied
 .link https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81
 .link https://gowebexamples.com/basic-middleware/
 .link https://gowebexamples.com/advanced-middleware/
+.link https://medium.com/@PurdonKyle/unit-testing-golang-http-middleware-c7727ca896ea
 .link https://github.com/nathj07/talks/middleware https://github.com/nathj07/talks/middleware - for all code and slides
