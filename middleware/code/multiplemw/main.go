@@ -16,6 +16,8 @@ func main() {
 	http.HandleFunc("/hello", Chain(hello, middlewares))
 	http.HandleFunc("/goodbye", Chain(goodbye, middlewares))
 
+	log.Println("App started, listening on port 8080")
+
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -89,7 +91,7 @@ func Personalise() Middleware {
 
 // Chain applies middlewares to a http.HandlerFunc
 func Chain(f http.HandlerFunc, mw []Middleware) http.HandlerFunc {
-	for _, m := range middlewares {
+	for _, m := range mw {
 		f = m(f)
 	}
 	return f
