@@ -16,9 +16,9 @@ func main() {
 	http.HandleFunc("/hello", Chain(helloGET, middlewares))
 	http.HandleFunc("/goodbye", Chain(goodbyeGET, middlewares))
 
-	log.Println("App started, listening on port 8080")
+	log.Println("App started, listening on port 3030")
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":3030", nil)
 }
 
 //
