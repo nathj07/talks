@@ -45,7 +45,7 @@ func Logging() Middleware {
 			start := time.Now()
 			defer func() {
 				log.Println(r.URL.Path, time.Since(start))
-				log.Println("User", r.Context().Value(usernameKey))
+				log.Println("User", r.Context().Value(userCtxKey{}))
 			}()
 			// Call the next middleware/handler in chain
 			f(w, r)
@@ -53,11 +53,8 @@ func Logging() Middleware {
 	}
 }
 
-type ctxKey int
+type userCtxKey struct{}
 
-const (
-	usernameKey ctxKey = 1
-)
 
 // Identification checks for the  user name in the query string,
 // if present it adds it to the context for the logger and prints it on the page.
@@ -69,8 +66,9 @@ func Identification() Middleware {
 			if user == "" {
 				// nothing more to do here
 				f(w, r)
+				return
 			}
-			ctx = context.WithValue(ctx, usernameKey, user)
+			ctx = context.WithValue(ctx, userCtxKey{}, user)
 			r = r.WithContext(ctx)
 			f(w, r)
 		}
