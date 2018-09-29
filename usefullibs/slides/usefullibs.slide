@@ -1,0 +1,132 @@
+Useful Libraries
+23 October 2018
+Tags: go meetup, libraries, testing, logging, error handling, routing, database, go northeast, golang northeast
+
+Nathan Davies
+Snr Software Engineer, Turnitin
+ndavies@turnitin.com nathanjamesdavies@gmail.com
+http://github.com/nathj07/talks/usefullibs
+@nathj07
+
+* Just use the standard library
+- Who has heard or read that advice?
+- Who has received that advice?
+- Who has given that advice?
+
+* Great standard library
+- Go standard library is amazing
+- You can do pretty much anything with it
+- To only use it is terrible advice
+- Go's strength is it's community
+
+* Categories
+- Testing
+- Logging
+- Output
+- HTTP
+: Libraries exist across many different domains; these categories are ones that are especially prone to the "Just use the standard library" treatment
+: This won't be an in depth tutorial but a speedy tour of what we use at Turnitin, why , and maybe some how. Though typically the how is covered by the library docs.
+: My final slide will have all the links on it as an easy reference point
+
+* Testing
+    if exp != got {
+        t.Errorf("Unexpected value. Got: %v; exp: %v", got, exp)
+    }
+: Simple right, and for the longest time I ardently defended this approach
+: I actually use this for error checking in test, that I still like
+
+* testify
+- https://github.com/stretchr/testify
+
+    assert.Equal(t, exp, got, "Optional explanatory message")
+
+- Simple and concise
+: Why shouldn't we use this approach, I've been converted 
+: Especially when I want to check lots of values in one test, or I have complex objects to compare.
+: This library also has really powerful mocking capabilities - I don't have time for those today - but you should check them out for sure
+
+* Logging
+- https://github.com/sirupsen/logrus
+- Drop in replacement fro std lib log
+- Structure logging
+
+* Logrus simple use
+    logrus.Info("Simple message")
+
+: This will log the message for you prefixed with the timestamp
+
+* Logrus customised setup
+    logrus.SetFormatter(&logrus.JSONFormatter{
+        TimestampFormat: time.RFC3339Nano
+    })
+
+    logrus.SetLevel(lvl)
+
+    logrus.SetOutput(fileOutput)
+
+* Logging with logrus
+    logrus.WithFields(logrus.Fields{
+		"numOfLinks": len(buffer),
+		"providerID": buffer[0].ProviderID,
+	}).Info("Batch sending links to ondemand")
+: You can even assing the result of WithFields, or a WithError to a local logger that can then be used for consistent logging
+
+* Logrus sample output
+    {
+        "time": "2018-09-29T11:32:03.247222483-07:00",
+        "providerID": 884,
+        "numOfLinks": 1000,
+        "msg": "Batch sending links to ondemand",
+        "level": "info"
+    }
+: This is really easy to play with, grep, scan, whatever. The structure is really nice
+: The fact that we use this means we have consistent logging and reliable information in all our logs without relying on the next developer to log something.
+
+* Output
+- https://github.com/davecgh/go-spew
+- https://github.com/hashicorp/go-multierror
+
+* Spew
+- Print a complex object in one go
+- Check on values when debugging
+- See type info
+    spew.Dump(myObj)
+
+
+: We have lots of simple output, and you can with the formatter print pretty cleanly
+: spew.Dump() just simplifies it
+: I mostly use this when debugging and I can't be bothered with delve - maybe a talk on that some time
+
+* Multierror
+- Not strictly output
+- Great for validation
+- Give full message back to the user
+
+* Multierror usage
+    func validateArgs() (*config, error) {
+        var err *multierror.Error
+        if providerID == nil || *providerID <= 0 {
+            err = multierror.Append(err, fmt.Errorf("Message))
+        }
+        if providerName == nil || *providerName == "" {
+            err = multierror.Append(err, fmt.Errorf("Message”))
+        }
+        return conf, err.ErrorOrNil()
+    }
+: As you can see we check all the potential validation issues and return a complete list of problems
+
+* Multierror output
+    2 error(s) occurred:
+
+    * You must supply the providerid for deletion
+    * You must supply the providername for deletion
+    exit status 1
+
+: We use this for CLI tools, as you can see and also in validation of request to micro-services
+: It really helps us provide a clean output encapsulating all the issues in one go.
+
+
+* HTTP
+- Routing
+- Testing
+: I know I coudl have covered the testing under the testing section but this is really a package for testing http servers easily
