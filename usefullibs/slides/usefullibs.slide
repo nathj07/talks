@@ -18,6 +18,8 @@ http://github.com/nathj07/talks/usefullibs
 - You can do pretty much anything with it
 - To only use it is terrible advice
 - Go's strength is it's community
+: The community has taken the standard library and used it to build some really awesome libraries.
+: We should use those, we should add to those, this  is a great way to get involved in giving back to the Go community
 
 * Categories
 - Testing
@@ -25,35 +27,56 @@ http://github.com/nathj07/talks/usefullibs
 - Output
 - HTTP
 : Libraries exist across many different domains; these categories are ones that are especially prone to the "Just use the standard library" treatment
-: This won't be an in depth tutorial but a speedy tour of what we use at Turnitin, why , and maybe some how. Though typically the how is covered by the library docs.
+: This won't be an in depth tutorial but a speedy tour of what we use at Turnitin, why, and maybe some how. Though typically the how is covered by the library docs.
 : My final slide will have all the links on it as an easy reference point
 
 * Testing
+
     if exp != got {
         t.Errorf("Unexpected value. Got: %v; exp: %v", got, exp)
     }
 : Simple right, and for the longest time I ardently defended this approach
-: I actually use this for error checking in test, that I still like
+: There is something nice about this, it looks like normal code.
+: This is pretty verbose, and when testing writing something clear and concise is really helpful
+: The output here is then also dependent on the developer writing the test, which can lead to inconsistency
 
 * testify
 - https://github.com/stretchr/testify
 
     assert.Equal(t, exp, got, "Optional explanatory message")
 
+    require.Nil(t, err, "Optional explanatory message")
+
 - Simple and concise
 : Why shouldn't we use this approach, I've been converted 
 : Especially when I want to check lots of values in one test, or I have complex objects to compare.
+: Using assert means the tests continue
+: Using require means the test stop - it's similar to t.Fatal
+: The output from these calls is consistent and easier to scan when you see your tests fail.
 : This library also has really powerful mocking capabilities - I don't have time for those today - but you should check them out for sure
 
 * Logging
+
+    log.Info(fmt.SprintF("Field: %v, Field: %s. Information", var2, str1))
+
+: This can be a good place to start logging in your app
+: It is not well structured
+: Message formatting is up to the individual developer, making finding stuff in your logs particularly tricky
+
+* logrus
 - https://github.com/sirupsen/logrus
-- Drop in replacement fro std lib log
+- Drop in replacement for std lib log
 - Structure logging
 
 * Logrus simple use
     logrus.Info("Simple message")
+- Or maybe for drop in replacement
+    import log github.com/sirupsen/logrus
+
+    log.Info("Simple message")
 
 : This will log the message for you prefixed with the timestamp
+: But it's not much better just like this
 
 * Logrus customised setup
     logrus.SetFormatter(&logrus.JSONFormatter{
@@ -65,11 +88,29 @@ http://github.com/nathj07/talks/usefullibs
     logrus.SetOutput(fileOutput)
 
 * Logging with logrus
+
     logrus.WithFields(logrus.Fields{
-		"numOfLinks": len(buffer),
-		"providerID": buffer[0].ProviderID,
-	}).Info("Batch sending links to ondemand")
-: You can even assing the result of WithFields, or a WithError to a local logger that can then be used for consistent logging
+        "numOfLinks": len(buffer),
+        "providerID": buffer[0].ProviderID,
+        }).Info("Batch sending links to ondemand")
+
+: You can even store the result of WithFields, or a WithError to a local logger that can then be used for consistent logging
+
+* Custom logger
+
+    logger := logrus.WithFields(logrus.Fields{
+        "numOfLinks": len(buffer),
+        "providerID": buffer[0].ProviderID,
+    })
+
+- later on...
+    logger.Info("Good times")
+    // or 
+    logger.WithError(err).Error("Bad times")
+    // or
+    logger.Warn("Gimme some of that")
+
+: In each of these the same fields are written to the log so you get consistent information
 
 * Logrus sample output
     {
@@ -79,6 +120,9 @@ http://github.com/nathj07/talks/usefullibs
         "msg": "Batch sending links to ondemand",
         "level": "info"
     }
+
+- This is done with a `| jq .`
+- Use with jq is now possible and really easy and useful
 : This is really easy to play with, grep, scan, whatever. The structure is really nice
 : The fact that we use this means we have consistent logging and reliable information in all our logs without relying on the next developer to log something.
 
@@ -90,6 +134,7 @@ http://github.com/nathj07/talks/usefullibs
 - Print a complex object in one go
 - Check on values when debugging
 - See type info
+
     spew.Dump(myObj)
 
 
@@ -100,16 +145,16 @@ http://github.com/nathj07/talks/usefullibs
 * Multierror
 - Not strictly output
 - Great for validation
-- Give full message back to the user
+- Give a full message back to the user
 
 * Multierror usage
     func validateArgs() (*config, error) {
         var err *multierror.Error
         if providerID == nil || *providerID <= 0 {
-            err = multierror.Append(err, fmt.Errorf("Message))
+            err = multierror.Append(err, fmt.Errorf("You must supply the providerid for deletion"))
         }
         if providerName == nil || *providerName == "" {
-            err = multierror.Append(err, fmt.Errorf("Message”))
+            err = multierror.Append(err, fmt.Errorf("You must supply the providername for deletion))
         }
         return conf, err.ErrorOrNil()
     }
@@ -122,11 +167,11 @@ http://github.com/nathj07/talks/usefullibs
     * You must supply the providername for deletion
     exit status 1
 
-: We use this for CLI tools, as you can see and also in validation of request to micro-services
+: We use this for CLI tools, as you can see,  and also in validation of request to micro-services
 : It really helps us provide a clean output encapsulating all the issues in one go.
 
 
 * HTTP
 - Routing
 - Testing
-: I know I coudl have covered the testing under the testing section but this is really a package for testing http servers easily
+: I know I could have covered the testing under the testing section but this is really a package for testing http servers easily
