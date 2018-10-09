@@ -12,12 +12,18 @@ http://github.com/nathj07/talks/usefullibs
 - Who has heard or read that advice?
 - Who has received that advice?
 - Who has given that advice?
+: Just use the standard library; by show of hands
+: who has heard or read that?
+: who has received that?
+: who has given that>
 
 * Great standard library
 - Go standard library is amazing
 - You can do pretty much anything with it
 - To only use it is terrible advice
 - Go's strength is it's community
+: The Go standard library is really good: it must be good if that advice can be seen as even half way practical
+: But it is pretty terrible advice - to only use the standard library
 : The community has taken the standard library and used it to build some really awesome libraries.
 : We should use those, we should add to those, this  is a great way to get involved in giving back to the Go community
 
@@ -25,8 +31,8 @@ http://github.com/nathj07/talks/usefullibs
 - Testing
 - Logging
 - Output
-- HTTP
-: Libraries exist across many different domains; these categories are ones that are especially prone to the "Just use the standard library" treatment
+: Libraries exist across many different domains.
+: These categories are ones that are especially prone to the "Just use the standard library" treatment
 : This won't be an in depth tutorial but a speedy tour of what we use at Turnitin, why, and maybe some how. Though typically the how is covered by the library docs.
 : My final slide will have all the links on it as an easy reference point
 
@@ -53,11 +59,80 @@ http://github.com/nathj07/talks/usefullibs
 : Using assert means the tests continue
 : Using require means the test stop - it's similar to t.Fatal
 : The output from these calls is consistent and easier to scan when you see your tests fail.
-: This library also has really powerful mocking capabilities - I don't have time for those today - but you should check them out for sure
+: This library also has really powerful mocking capabilities 
+
+* mocking with testify
+- Use this when we don't want to hit the database
+- Create a mock implementation of the interface
+- Assert calls were or were not made
+
+* interface
+
+    type Warehouse interface {
+        GetProvider(providerID int) (*warehouse.Provider, error)
+    }
+
+* define the mock
+
+    // MockWarehouse implements the Warehouse interface for the purpose of testing
+    type MockWarehouse struct {
+	    mock.Mock
+    }
+    
+    // GetProvider is used to assert the method is called
+    func (mw *MockWarehouse) GetProvider(providerID int) (*warehouse.Provider, error) {
+        args := mw.Called(providerID)
+        return args.Get(0).(*warehouse.Provider), args.Error(1)
+    }
+: Here we define the mock and embed mock.Mock
+: the mock implementation hangs off this, ready to be used in tests
+
+* using in tests
+    wh := &mocks.MockWarehouse{}
+    wh.On("GetProviders").Return(test.ExistingProviders, nil)
+    obj.Warehouse = wh
+    //
+    // call functions under tests
+    //
+    wh.AssertExpectations(t)
+
+: in tests where we don't need to exercise the actual DB code this is really useful
+: we do obviously have tests that work with the DB, but there are cases where we just need to know a method was called
+: this makes test setup and teardown much simpler and faster.
+
+* httpmock
+- https://github.com/dankinder/httpmock
+- Simplifies creating mock server responses
+- Plays well with testify.mock
+: this extends the httptest package from the standard library
+
+
+* From the README
+
+    downstream := &httpmock.MockHandler{}
+
+    // A simple GET that returns some pre-canned content
+    downstream.On("Handle", "GET", "/object/12345", mock.Anything).Return(httpmock.Response{
+        Body: []byte(`{"status": "ok"}`),
+        Status: http.StatusOK,
+    })
+
+    s := httpmock.NewServer(downstream)
+    defer s.Close()
+
+    //
+    // Make any requests you want to s.URL(), using it as the mock downstream server
+    //
+
+    downstream.AssertExpectations(t)
+
+: The body can be anything you want
+: The response code can be any code you need in your tests
+: If you need the URL of the server in the object under test s.URL() will do it
 
 * Logging
 
-    log.Info(fmt.SprintF("Field: %v, Field: %s. Information", var2, str1))
+    log.Info(fmt.Sprintf("Field: %v, Field: %s. Information", var2, str1))
 
 : This can be a good place to start logging in your app
 : It is not well structured
@@ -70,6 +145,7 @@ http://github.com/nathj07/talks/usefullibs
 
 * Logrus simple use
     logrus.Info("Simple message")
+
 - Or maybe for drop in replacement
     import log github.com/sirupsen/logrus
 
@@ -79,6 +155,7 @@ http://github.com/nathj07/talks/usefullibs
 : But it's not much better just like this
 
 * Logrus customised setup
+
     logrus.SetFormatter(&logrus.JSONFormatter{
         TimestampFormat: time.RFC3339Nano
     })
@@ -121,7 +198,6 @@ http://github.com/nathj07/talks/usefullibs
         "level": "info"
     }
 
-- This is done with a `| jq .`
 - Use with jq is now possible and really easy and useful
 : This is really easy to play with, grep, scan, whatever. The structure is really nice
 : The fact that we use this means we have consistent logging and reliable information in all our logs without relying on the next developer to log something.
@@ -150,12 +226,15 @@ http://github.com/nathj07/talks/usefullibs
 * Multierror usage
     func validateArgs() (*config, error) {
         var err *multierror.Error
+        
         if providerID == nil || *providerID <= 0 {
             err = multierror.Append(err, fmt.Errorf("You must supply the providerid for deletion"))
         }
+        
         if providerName == nil || *providerName == "" {
             err = multierror.Append(err, fmt.Errorf("You must supply the providername for deletion))
         }
+        
         return conf, err.ErrorOrNil()
     }
 : As you can see we check all the potential validation issues and return a complete list of problems
@@ -167,11 +246,12 @@ http://github.com/nathj07/talks/usefullibs
     * You must supply the providername for deletion
     exit status 1
 
-: We use this for CLI tools, as you can see,  and also in validation of request to micro-services
+: We use this for CLI tools, as you can see, and also in validation of request to micro-services
 : It really helps us provide a clean output encapsulating all the issues in one go.
 
-
-* HTTP
-- Routing
-- Testing
-: I know I could have covered the testing under the testing section but this is really a package for testing http servers easily
+* Useful libraries
+- https://github.com/stretchr/testify
+- https://github.com/dankinder/httpmock
+- https://github.com/sirupsen/logrus
+- https://github.com/davecgh/go-spew
+- https://github.com/hashicorp/go-multierror
