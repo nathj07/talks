@@ -35,6 +35,8 @@ http://github.com/nathj07/talks/usefullibs
 : These categories are ones that are especially prone to the "Just use the standard library" treatment
 : This won't be an in depth tutorial but a speedy tour of what we use at Turnitin, why, and maybe some how. Though typically the how is covered by the library docs.
 : My final slide will have all the links on it as an easy reference point
+: Another classic area for this treatment is http routing and web frameworks.
+: We do use libraries for routing but there isn;t time in a lightning talk to cover that properly
 
 * Testing
 
