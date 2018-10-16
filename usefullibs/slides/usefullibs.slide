@@ -76,9 +76,9 @@ http://github.com/nathj07/talks/usefullibs
 
     // MockWarehouse implements the Warehouse interface for the purpose of testing
     type MockWarehouse struct {
-	    mock.Mock
+        mock.Mock
     }
-    
+
     // GetProvider is used to assert the method is called
     func (mw *MockWarehouse) GetProvider(providerID int) (*warehouse.Provider, error) {
         args := mw.Called(providerID)
