@@ -134,24 +134,19 @@ http://github.com/nathj07/talks/usefullibs
 
 * Logging
 
-    log.Info(fmt.Sprintf("Field: %v, Field: %s. Information", var2, str1))
+    log.Print(fmt.Sprintf("Field: %v, Field: %s. Information", var2, str1))
 
 : This can be a good place to start logging in your app
 : It is not well structured
 : Message formatting is up to the individual developer, making finding stuff in your logs particularly tricky
+: Also we don;t have levels well defined in the std lib
 
 * logrus
 - https://github.com/sirupsen/logrus
-- Drop in replacement for std lib log
 - Structure logging
 
 * Logrus simple use
     logrus.Info("Simple message")
-
-- Or maybe for drop in replacement
-    import log github.com/sirupsen/logrus
-
-    log.Info("Simple message")
 
 : This will log the message for you prefixed with the timestamp
 : But it's not much better just like this
