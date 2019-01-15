@@ -19,7 +19,7 @@ http://github.com/nathj07/talks/structuretips
 : This talk is a little different from my usual fare, it is a little less organised and just a small collection
 : hints and tips and ideas I've picked up a long the way.
 : This is somewhat opinionated
-: The hope is that some of these will be useful to you too; but there's not other overarching theme here.
+: The hope is that some of these will be useful to you too; but there's no other overarching theme here.
 
 * routes.go
 - Thank you Matt Ryer
@@ -127,9 +127,10 @@ http://github.com/nathj07/talks/structuretips
         // Use d; this is the happy path as left as can be
     }
 - Integrity, readability, simplicity, and performance (from Bill Kennedy)
-: Happy path outdenting is old advice but bears repeating.
+: Happy path outdenting is old advice but stands repeating.
+: I've definitely had to encourage people to write like this, it is something worth saying again.
 : Having the desired path through the code be to the left make scanning the code much faster
-: Returning as soon as you can/have to make the code easier to reason about and avoids lots of extra flag checking etc
+: Returning as soon as you can/have to makes the code easier to reason about and avoids lots of extra flag checking etc
 : Integrity - consistent use of i/o, opens and closes, use the idioms of Go. Use data consistently, accuracy. Don't corrupt data
 : Readability - don't be overly smart, keep the code readable, even if a little verbose
 : Simplicity - keep your code simple, so streamline the code after you have made it readable, you may leave readability behind but the simplicity can reduce
