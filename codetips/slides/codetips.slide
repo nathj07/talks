@@ -1,0 +1,145 @@
+Code Tips
+22nd January 2019
+Tags: go meetup, structure, packages, structs, tips, organisation, go northeast, golang northeast
+
+Nathan Davies
+Snr Software Engineer, Turnitin
+ndavies@turnitin.com nathanjamesdavies@gmail.com
+http://github.com/nathj07/talks/structuretips
+@nathj07
+
+* Scene Setting
+- routes.go
+- Define a package
+- Single responsibility
+- common? utils? shared?
+- DAMP v DRY
+- Take responsibility
+- Miscellany
+: This talk is a little different from my usual fare, it is a little less organised and just a small collection
+: hints and tips and ideas I've picked up a long the way.
+: This is somewhat opinionated
+: The hope is that some of these will be useful to you too; but there's not other overarching theme here.
+
+* routes.go
+- Thank you Matt Ryer
+- HTTP routes defined in one file
+- File is of single purpose
+- On startup just call defineRoutes()
+: This one was a big change for us.
+: Previously had all the routes defined in an app.go, right where we would start the app
+: All those routes cluttered up the business of starting the app
+: Now we just call defineRoutes()
+: Any developer still knows where to find route definitions, but the app startup code is clean
+
+* Define a package
+- Purpose v Data
+- Be consistent on this
+- Attempt to keep files small
+: I find it helpful to think of a package as either focused on the data it's dealing with or on the purpose it serves
+: Which makes most sense can vary based on the application
+: If you pick purpose or function then everything in that package should be for that purpose
+: If you pick data then everything in that package is about that data and only that data
+: File size is not that big a deal really. As a personal preference I don't enjoy wading through massive code files
+: Often, though, you can find logical places to split a single file into more files, each focused on a subset of the
+: packages responsibility.
+
+* Single Responsibility
+- Keep packages focused on one main area
+- Keep functions responsible for one thing
+- Compose functions
+: Following on from  the previous idea, keeping packages focused is really helpful.
+: If you have package file don't have database interactions in there for example
+: Keeping focus keeps the code more discoverable and readable for the nex dev, which may well be future you
+: Applying this level of focus to functions is really useful, and lends it self to composability
+
+* Single Responsibility (cont'd)
+    package report
+
+    func GenerateReport(id int) ([]byte, error){
+        d, err := getRawData(id)
+        if err != nil {
+            return nil, err
+        }
+        results := runCalculations(d)
+
+        return makeReport(results)
+    }
+
+    func getRawData(id int) ([]byte, error){}
+
+    // could be composed of specific function calls
+    func runCalculations(data []byte) []data {}
+
+    func makeReport(data []byte) ([]byte, error)
+
+: A somewhat contrived example but the basic algorithm is:
+: get the raw data
+: run calculations on the data; maybe augment with something else
+: compose the report ready for consumption
+: This could be done in one function but by splitting it out like this each function is easier to read,
+: easier to test, easier to reuse and simpler to modify.
+: The example should serve to illustrate the point. Keep functions, where possible, to a step in the algorithm, and then
+: use a controller type function to compose those steps together to fulfil the requirement.
+
+* common? utils? shared?
+- A lot of hate for these
+- Sometimes useful
+- Have focused files
+- Focused files can become focused packages
+: There is a lot of hate for the common package or the utils, or shared package or whatever other name
+: you want to give to the general purpose package you may have in your code.
+: If you have package responsibility or focus defined by purpose this become simpler.
+: We've had a shared package hold all sorts. Each file was of a specific purpose, so we made focused packages
+: Now it is easier to find the code we are looking for.
+: It's not always simple and sometimes shared, or utils just makes so much sense, but it's worth taking some time
+: to see if there is a better option.
+
+* DAMP V DRY
+- Don't Repeat Yourself
+- Don't Abstract Methods Prematurely (Matt Ryer again, twitter this time)
+- A little copying is better than a little dependency (Rob Pike)
+: There's a balance here.
+: It's about timing. Sometimes we think something will be used lots, and we abstract it out. Then it's only used once.
+: If that is the case refactor it to be not abstracted
+: Abstracting early is a like premature optimization, we shouldn't do it
+: I would suggest if you need it once, write it where you need it. If you need it twice, copy it, assuming it's simple.
+: If you need it a 3rd time, then refactor. Works as a rule of thumb, it's not hard and fast
+
+* Take Responsibility
+- Write your own unit tests
+- Initialize and date TODO comments
+    // TODO (nd 2018-12-16)
+- Regularly review TODOs
+: Not sure I need to call this one, except I do hear tales of engineers not writing their own unit tests.
+: In case that's you, stop it, write your own tests
+: EITHER More on that from Rosie later OR Thank you Rosie for your talk on just that.
+: TODO: we all use it, but name it as yours and then take some public ownership for it
+: The next thing is to make sure you review the TODOs in your code regularly, get them done!
+
+* Miscellany
+- Outdent the happy path
+    func exampleCode() error{
+        d, err := callThatCouldError()
+        if err != nil {
+            return err
+        }
+        // Use d; this is the happy path as left as can be
+    }
+- Integrity, readability, simplicity, and performance (from Bill Kennedy)
+: Happy path outdenting is old advice but bears repeating.
+: Having the desired path through the code be to the left make scanning the code much faster
+: Returning as soon as you can/have to make the code easier to reason about and avoids lots of extra flag checking etc
+: Integrity - consistent use of i/o, opens and closes, use the idioms of Go. Use data consistently, accuracy. Don't corrupt data
+: Readability - don't be overly smart, keep the code readable, even if a little verbose
+: Simplicity - keep your code simple, so streamline the code after you have made it readable, you may leave readability behind but the simplicity can reduce
+: spots for bugs. You have to have data for this to guide the decision and it is a conscious decision
+: Performance - now you know where the bottlenecks are you can tune for performance.
+: Note that performance only needs to be good enough
+: This order is important
+
+* References
+- https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831
+- https://go-proverbs.github.io/
+- http://hellotechpros.com/bill-kennedy-productivity/
+
