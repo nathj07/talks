@@ -1,6 +1,6 @@
 # Elevator Pitch (300 characters)
 
-Go has an excellent community. However, I see and hear a lot of "just use the standard library" as advice given to newcomers. We should acknowledge the and promote the community & libraries we find useful. This talk will build community by promoting the more nuanced response of "try this library..."
+Go has an excellent community. However, I see and hear a lot of "just use the standard library" as advice given to newcomers. We should acknowledge & promote the community & libraries we find useful. This talk will build community by promoting the more nuanced response of "try this library..."
 
 # Abstract
 Go is a great language. Go has an excellent community. Those two make a powerful combination. However, I see and hear a lot of "just use the standard library" as advice given to newcomers. We need to stop this, we need to be more nuanced. It indicates how powerful the language is but it minimises how great the community is. This talk will cover a number of very useful libraries across a variety of domains that we, at Turnitin, have used and found very effective. The result will be that we, as a community, can start to give better, more welcoming advice to the newcomers and to the old hands alike.
@@ -39,33 +39,36 @@ In this way we, as a community, will be more welcoming, more encouraging and wil
     * how come we can even give it
     * why is it bad
     * examples of where it is bad
-* The main areas where I've seen this are:
+* The main areas I've seen this in:
     * web development, especially in routing
     * logging
     * testing
 * Other ares cover command line args, and output, there are more but we will cover the main 3
-* routing
-    * show how routes look using just the standard library
-    * show how they look using open source packages
-* logging
-    * demonstrate logging using just the standard library
-    * show logging with an open source library
-    * highlight the benefits
-    * anecdotes of how this can save you time
-* testing
-    * show a simple test using only the standard library
-    * show a more complex test using the standard library
-    * show how we have used testify to simplify testing
-    * benefits of clearer code, clearer output and shorter time to write
-* What advice to give
-    * review the libraries you use, recommend them
-    * contribute to the libraries you use
-    * write posts or tweets about the libraries you use
-    * we can still recommend the standard library, let's not swing too far the other way, as the Brits say don't throw the baby out with the bath water
-* Conclusion
-    * let's make our awesome community more welcoming
-    * we will benefit as a community from encouraging people to join in
-    * lowering the barrier to entry will bring more folks in and we will benefit from their experience
+* Lets look at some code
+    * routing
+        * show how routes look using just the standard library
+        * show how they look using open source packages
+    * logging
+        * demonstrate logging using just the standard library
+        * show logging with an open source library
+        * highlight the benefits
+        * anecdotes of how this can save you time
+    * testing
+        * show a simple test using only the standard library
+        * show a more complex test using the standard library
+        * show how we have used testify to simplify testing
+        * benefits of clearer code, clearer output and shorter time to write
+    * What advice to give
+        * review the libraries you use, recommend them
+        * contribute to the libraries you use
+        * write posts or tweets about the libraries you use
+        * we can still recommend the standard library, let's not swing too far the other way, as the Brits say don't throw the baby out with the bath water
+    * Conclusion
+        * compare the conversations of "just use the standard library" and "here's a library I found useful for that problem"
+        * let's make our awesome community more welcoming
+        * we will benefit as a community from encouraging people to join in
+        * lowering the barrier to entry will bring more folks in and we will benefit from their experience
+        * help each other write better software
 
 # Description
 
@@ -90,4 +93,8 @@ Having been to dotGo and interacted with the audience before I think that there 
 # Notes
 I've been using Go since 2013, where I started with just the standard library. I've built micro-services, monoliths, and command tool in Go shipping to a variety of environments. I've used a lot of libraries and as an active member of my local Go community I have moved from saying "just use the standard library" to saying "you could try the following library".
 
-I think this experience, a light hearted approach to the subject, and deep love for the Go community make me a good person to talk on the subject.
+As a passionate member of the Go community I want to help folks engage with the community and the language. I've been active in doing just that since the start of my journey with Go. This talk is the next step on that journey for me.
+
+I think this experience, a light hearted approach to the subject, and deep love for Go and the Go community make me a good person to talk on the subject.
+
+Finally please see this video of me presenting at [GopherCon UK 2018](https://www.youtube.com/watch?v=FiMEgS6fGqc).

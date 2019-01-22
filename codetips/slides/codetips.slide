@@ -127,7 +127,7 @@ http://github.com/nathj07/talks/structuretips
         // Use d; this is the happy path as left as can be
     }
 - Integrity, readability, simplicity, and performance (from Bill Kennedy)
-: Happy path outdenting is old advice but stands repeating.
+: Happy path out-denting is old advice but stands repeating.
 : I've definitely had to encourage people to write like this, it is something worth saying again.
 : Having the desired path through the code be to the left make scanning the code much faster
 : Returning as soon as you can/have to makes the code easier to reason about and avoids lots of extra flag checking etc
