@@ -49,7 +49,7 @@ http://github.com/nathj07/talks/structuretips
 - Keep functions responsible for one thing
 - Compose functions
 : Following on from  the previous idea, keeping packages focused is really helpful.
-: If you have package file don't have database interactions in there for example
+: If you have package for handling file interactions don't have database interactions in there for example
 : Keeping focus keeps the code more discoverable and readable for the nex dev, which may well be future you
 : Applying this level of focus to functions is really useful, and lends it self to composability
 
