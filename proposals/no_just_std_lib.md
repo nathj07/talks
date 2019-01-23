@@ -20,7 +20,7 @@ Yet that advice, whether we mean to or not, puts a barrier up between those in t
 
 What I am going to do in this talk is demonstrate, from experience, some of the better options we could provide when asked "how to do you do x in Go?"
 
-The aim is to get us all thinking more about the libraries we do use and how we can share the knowledge to mae the community more welcoming to newcomers.
+The aim is to get us all thinking more about the libraries we do use and how we can share the knowledge to make the community more welcoming to newcomers.
 
 
 # Conclusion
