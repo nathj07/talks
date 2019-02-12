@@ -19,16 +19,34 @@ func nameHdlr(w http.ResponseWriter, r *http.Request) {
 }
 
 func ageLocHdlr(w http.ResponseWriter, r *http.Request) {
-	// get the values from the path - inherently buggy as is
+	// test verb
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintf(w, "Only GET requests are support currently, you made a %s request", r.Method)
+		return
+	}
+	// get the values from the path
 	parts := strings.Split(r.URL.Path, "/")
 	fmt.Fprintf(w, "Age: %s; Loc: %s", parts[3], parts[4])
 }
 
-func namedAgeLocGET(w http.ResponseWriter, r *http.Request,  ps httprouter.Params){
+func ageLocNameHdlr(w http.ResponseWriter, r *http.Request) {
+	// test verb
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintf(w, "Only GET requests are support currently, you made a %s request", r.Method)
+		return
+	}
+	// get the values from the path
+	parts := strings.Split(r.URL.Path, "/")
+	fmt.Fprintf(w, "Age: %s; Loc: %s; Name: %s", parts[3], parts[4], parts[5])
+}
+
+func namedAgeLocGET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "Age: %s; Loc: %s", ps.ByName("age"), ps.ByName("loc"))
 }
 
-func namedAgeLocPUT(w http.ResponseWriter, r *http.Request,  ps httprouter.Params){
+func namedAgeLocPUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "PUTTING Age: %s; Loc: %s", ps.ByName("age"), ps.ByName("loc"))
 }
 func main() {
@@ -36,6 +54,8 @@ func main() {
 	http.HandleFunc("/", indexHdlr)
 	http.HandleFunc("/name/", nameHdlr)           // get one thing from the path
 	http.HandleFunc("/age/location/", ageLocHdlr) // get two things from the path
+	// this, with no vars, would clash with the above, and panic as there are not enough path parts
+	http.HandleFunc("/age/location/name", ageLocNameHdlr)
 	// err := http.ListenAndServe(":9090", nil)
 	// if err != nil {
 	// 	log.Fatal("ListenAndServe: ", err)
