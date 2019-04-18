@@ -40,18 +40,22 @@ http://github.com/nathj07
 : impact on external resource is known and managed
 : WaitGroup allows us to ensure certain tasks are complete
 : Typically we create a channel up front and pass it into the functions that need to send or receive on that channel.
+: You can, and we do, wrap this all in a function to make the whole pool non-blocking
 
 
 * Channels: Buffered v Unbuffered
 .play ../code/basic/concurrency.go /^func main/,/^}/
 : buffered seems tempting; leads to the question "How big"
 : unbuffered you need something to receive off before send on
+: There is no right or wrong option here, it is all down to your application
+: We use a combination of both. We define a main pipeline, often with an unbuffered channel and then have steps in the
+: pipeline that need to group data together, or where we don't want to wait for the receiver to finish, using a buffered channel.
 
 * Batch Flow v Continuous Flow
-- continues the discussion on buffered v unbuffered
 - processing data can process batches or a continuous flow
-- batch means pulling data; processing it all; and repeat - buffered channel
-- continuous means pulling data all the time - unbuffered channel
+- batch means pulling data; processing it all; and repeat
+- continuous means pulling data all the time
+
 
 * Batch Flow example
 .code ../code/batch/flow.go  /^func main/,/^}/
