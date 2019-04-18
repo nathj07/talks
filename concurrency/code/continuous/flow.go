@@ -35,7 +35,7 @@ func fetchData(db *sql.DB) {
 	for i := 0; i <= 1; i++ {
 		fmt.Println("Iteration ", i)
 		fmt.Println("Fetch Data from DB")
-		rows, err := db.Query("SELECT name, url FROM provider")
+		rows, err := db.Query("SELECT name, url FROM site")
 		if err != nil {
 			log.Fatalf("Error fetching data: %v", err)
 		}
