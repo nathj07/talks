@@ -14,5 +14,8 @@ func GetDBConnection() *sql.DB {
 	if err != nil {
 		log.Panicf("Error making connection. Stopping app: %v", err)
 	}
+	if err := db.Ping(); err != nil {
+		log.Panicf("Error testing connection. Stopping app: %v", err)
+	}
 	return db
 }

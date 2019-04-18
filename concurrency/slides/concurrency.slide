@@ -3,42 +3,26 @@ Concurrency at Turnitin
 Tags: go meetup, concurrency, semaphore, worker pools, go northeast, golang northeast, graceful shutdown
 
 Nathan Davies
-Software Engineer, Turnitin
+Snr Software Engineer, Turnitin
 ndavies@turnitin.com
 http://github.com/nathj07
 @nathj07
 
 * Scene Setting
-- Not a theoretical walkthrough; see the resources slide
+- Not a theoretical walk through; see the resources slide
 - How we use concurrency at Turnitin
 - Real world examples
-- A cautionary tale
 
-* Rate limiting
-- The export app; a cautionary tale
-- go routines are easy to use
-- go routines are pretty lightweight
-- A naive Worker Pool
+* Primitives
+- go routines
+- channels
+: We will be covering the go routine and channel primitives, showing how they have been used at Turnitin.
+: This talk does not cover the race detector, perhaps a separate talk on data races, and we do not look at mutexes.
+: Mutexes are ignored in this talk as they are rarely used and I wanted to maintain focus on go routines and channels
+: If you want to talk more about mutexes let's do it in the pub afterwards.
 
-* Worker Pool - Naive
-	var wg sync.WaitGroup
-	// md is a slice of data to process
-	for i := 0; i < len(md); i++ {
-		m := md[i]
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			...
-		}()
-	}
-	wg.Wait()
-- the rate is controlled by the for loop
-- unsuitable limits
--  `len(md)`  is unknown ahead of time
-- go routines DO consume resources
-- resource consumption can be beyond your own system
 
-* Worker Pools - Better
+* Worker Pools
 - need to have a controlled, deterministic number of workers
 	// mds is a channel of data to process
 	workerCount := 20 // better from config
@@ -53,13 +37,15 @@ http://github.com/nathj07
 		}()
 	}
 	wg.Wait()
-- impact on external resource is now known and managed
-- WaitGroup allows us to ensure certain tasks are complete
+: impact on external resource is known and managed
+: WaitGroup allows us to ensure certain tasks are complete
+: Typically we create a channel up front and pass it into the functions that need to send or receive on that channel.
+
 
 * Channels: Buffered v Unbuffered
 .play ../code/basic/concurrency.go /^func main/,/^}/
-- unbuffered you need something to recevie off before send on
-- buffered seems tempting; leads to the question "How big"
+: buffered seems tempting; leads to the question "How big"
+: unbuffered you need something to receive off before send on
 
 * Batch Flow v Continuous Flow
 - continues the discussion on buffered v unbuffered
@@ -71,54 +57,90 @@ http://github.com/nathj07
 .code ../code/batch/flow.go  /^func main/,/^}/
 - very deterministic
 - resource use grows a lot initially, fluctuates around the peak, then drops
-- _demo_and_code_
 
 * Continuous Flow Example
 .code ../code/continuous/flow.go  /^func main/,/^}/
-- At Tii we switched from batch to continuous flow
 - smoother resource use
 - better processing rates, not so much blocking
 - tasks are more interleaved
-- _demo_and_code_
+- _code_and_demo_
+: let's jump over to some actual code, running it will help us see more clearly what is happening
+: start with batch, we can see the difference here in introducing a worker pool too.
+: Without the worker pool we get everything written and then we start processing, even though there is a go routine involved.
+: When we add the worker pool we see a different processing order.
+: It's less deterministic but we are now moving more continually through the pipeline.
+: When we look at the continuous processing model, we see a slight variation in the processing order.
+: Essentially the data is moving through the pipeline quicker, each provider is moving to the next step sooner.
 
-* The Story So Far
-- A lot of concurrency primitives used
-- `WaitGroup` to control flow and guarantee tasks finish
-- Parrallelised different actions via go routines
-- Run the same task mulitple times simultaneously - worker pool
-- Used `chan` to share memory by communicating
-- Building blocks for any highly performant app
-- Robust and easy to reason about
+* Which to use
+- At Tii we use a mixture of continuous and batch, even within a single app
+- Continuous flow for those tasks best served by having data move through a pipeline
+- Batch where the task can take time
+: Essentially our main work flow of a data processing application is done using continuous flow.
+: This means we are always pushing data through the pipeline.
+: There are a couple of tasks in the pipeline that take a long time to complete, calls out to external services, for example.
+: For these we use the buffered channel, allowing us to send the data off to the job and then move on, we don't need to wait
+: for the job to complete.
+: This combination is very useful and allows us to keep the overall process flowing smoothly. Finding the balance is key.
+: If you think you need to add go routines, or tune them, or switch from buffered to unbuffered or vice-versa I'd recommend
+: instrumenting your app first. Uses statsd or similar to see how long you wait for a channel, or how long certain actions take.
+: Utilise profiling, we've had some great talks on that recently.
+: Understand your app and your bottlenecks before adding complexity.
 
-* Up Next
-- done signals and graceful shutdown
-- `select`
-- `mutex`
+
+* Return Channel
+- channels can be returned from functions
+- allows the caller to decide if the call is asynch or not
+    func doStuff() chan struct{} {
+        c := make(chan struct{})
+        go func(){
+            defer close(c)
+            // all the work is done here
+        }()
+        return c
+    }
+
+* Return Channel contd...
+- doStuff can be used synchronously
+    doStuff()
+    doThings() // there is no wait
+
+- doStuff can be used asynchronously
+    c := doStuff()
+    <-c // this will block
+    doThings()
+
+* Semaphore
+- Using channels without go routines
+- A buffered channel can act as a semaphore
+    sem := make(chan struct{}, 10)
+    sem <- struct{}{}
+    // take action
+    <-sem
+: Using a channel like this is simple, and clear.
+: We get the control we need around certain actions without complex locking code and it is relatively simple to test
+: The empty struct is sued as this effectively compiles down to 0, meaning no memory overhead here.
+
 
 * Done Signal Example
 .code ../code/stopping/stopping.go  /^func main/,/^}/
 .code ../code/stopping/stopping.go  /^func stop/,/^}/
 - good for continuous flow
 - good for managing shutdown
-- _code_and_demo_
 
 * select and SIGINT
 .code ../code/sigint/sigint.go  /NOTIFY/,/NOTIFY//
 .code ../code/sigint/sigint.go  /FETCH/,/FETCH//
-- graceful shutdown on intereupt
+- graceful shutdown on interrupt
 - good for long running apps
-- _code_and_demo_
 
 * select and sleeping
 - sometimes we need a controlled sleep in an app
 - deleting old files; we only want to walk the directory once every 12 hours
-	func (m *Manager) ClearOldItems() {
+	func ClearOldItems() {
 		for {
-			// walk the ContentDir
-			if err := filepath.Walk(m.conf.ContentDir, m.clear); err != nil {
-				logrus.WithError(err).Debug("Application stopping")
-				return
-			}
+			// use filepath.Walk to traverse directory and clear old files off disk
+
 			select {
 			case <-m.quit:
 				logrus.Info("ClearOldItems, quit signal encountered")
@@ -128,34 +150,6 @@ http://github.com/nathj07
 		}
 	}
 - call this in a go routine
-
-* mutex
-- not used often
-- not needed for most concurrent applications
-- I use it to implement a cache with a go routine safe map
-
-* Mutex example
-	// mutex
-	var mu sync.Mutex
-	// standard map
-	dispatchedProviders := make(map[int]struct{})
-
-	// read from the map
-	mu.Lock()
-	_, dispatched := dispatchedProviders[p.ID]
-	mu.Unlock()
-
-	if dispatched {
-		// provider already dispatched; drop this one on the floor
-		continue
-	}
-	// write provider to the cache, this is removed when processing is finished in dispatchProvider
-	mu.Lock()
-	dispatchedProviders[p.ID] = struct{}{}
-	mu.Unlock()
-	providerChan <- p
-- real world snippet for preventing us from dispatching providers multiple times
-- useful under the continuous flow model
 
 * Resources
 - Use the race detector!

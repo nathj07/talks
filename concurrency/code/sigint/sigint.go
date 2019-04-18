@@ -60,7 +60,7 @@ func fetchData(db *sql.DB) {
 		// FETCH OMIT
 		fmt.Println("Iteration ", i)
 		fmt.Println("Fetch Data from DB")
-		rows, err := db.Query("SELECT name, url FROM provider")
+		rows, err := db.Query(`SELECT publisher_name, url FROM publication_stats LIMIT 10`)
 		if err != nil {
 			log.Fatalf("Error fetching data: %v", err)
 		}
@@ -84,7 +84,7 @@ func useData() {
 	defer close(done)
 	var wg sync.WaitGroup
 	concurrencyRate := 10 // in the wild you'd use a config variable for this
-	for i := 0; i <= concurrencyRate; i++ {
+	for i := 0; i < concurrencyRate; i++ {
 		fmt.Println("Worker ", i)
 		wg.Add(1)
 		go func() {
@@ -98,7 +98,7 @@ func useData() {
 						return
 					}
 					defer resp.Body.Close()
-					fmt.Printf("Processing Data: %q\t%v\n", p.name, resp)
+					fmt.Printf("Processing Data: %q\t%s\n", p.name, resp.Status)
 				}()
 			}
 		}()
