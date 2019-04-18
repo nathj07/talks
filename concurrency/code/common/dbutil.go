@@ -6,7 +6,7 @@ import (
 )
 
 // ConnectionString is used for connecting to the local postgres DB
-var ConnectionString = `user=postgres host=127.0.0.1 dbname=content_intake_dev sslmode=disable binary_parameters=yes`
+var ConnectionString = `user=postgres host=127.0.0.1 dbname=seu_content_intake sslmode=disable binary_parameters=yes`
 
 // GetDBConnection centralizes the connection calls
 func GetDBConnection() *sql.DB {

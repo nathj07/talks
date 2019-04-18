@@ -63,17 +63,29 @@ http://github.com/nathj07
 - smoother resource use
 - better processing rates, not so much blocking
 - tasks are more interleaved
+- _code_and_demo_
+: let's jump over to some actual code, running it will help us see more clearly what is happening
+: start with batch, we can see the difference here in introducing a worker pool too.
+: Without the worker pool we get everything written and then we start processing, even though there is a go routine involved.
+: When we add the worker pool we see a different processing order.
+: It's less deterministic but we are now moving more continually through the pipeline.
+: When we look at the continuous processing model, we see a slight variation in the processing order.
+: Essentially the data is moving through the pipeline quicker, each provider is moving to the next step sooner.
 
 * Which to use
-- At Tii we use a mixture, even within a single app
+- At Tii we use a mixture of continuous and batch, even within a single app
 - Continuous flow for those tasks best served by having data move through a pipeline
 - Batch where the task can take time
-: Essentially ou main work flow of a data processing application is done using continuous flow.
+: Essentially our main work flow of a data processing application is done using continuous flow.
 : This means we are always pushing data through the pipeline.
 : There are a couple of tasks in the pipeline that take a long time to complete, calls out to external services, for example.
 : For these we use the buffered channel, allowing us to send the data off to the job and then move on, we don't need to wait
 : for the job to complete.
-: This combination is very useful and allows us to keep the overall process flowing smoothly.
+: This combination is very useful and allows us to keep the overall process flowing smoothly. Finding the balance is key.
+: If you think you need to add go routines, or tune them, or switch from buffered to unbuffered or vice-versa I'd recommend
+: instrumenting your app first. Uses statsd or similar to see how long you wait for a channel, or how long certain actions take.
+: Utilise profiling, we've had some great talks on that recently.
+: Understand your app and your bottlenecks before adding complexity.
 
 
 * Return Channel
