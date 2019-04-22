@@ -67,7 +67,10 @@ http://github.com/nathj07
 - smoother resource use
 - better processing rates, not so much blocking
 - tasks are more interleaved
-- _code_and_demo_
+
+* To the Code
+- buffered chan
+- unbuffered chan
 : let's jump over to some actual code, running it will help us see more clearly what is happening
 : start with batch, we can see the difference here in introducing a worker pool too.
 : Without the worker pool we get everything written and then we start processing, even though there is a go routine involved.
@@ -105,11 +108,11 @@ http://github.com/nathj07
     }
 
 * Return Channel contd...
-- doStuff can be used synchronously
+- doStuff can be used asynchronously
     doStuff()
     doThings() // there is no wait
 
-- doStuff can be used asynchronously
+- doStuff can be used synchronously
     c := doStuff()
     <-c // this will block
     doThings()
@@ -123,7 +126,7 @@ http://github.com/nathj07
     <-sem
 : Using a channel like this is simple, and clear.
 : We get the control we need around certain actions without complex locking code and it is relatively simple to test
-: The empty struct is sued as this effectively compiles down to 0, meaning no memory overhead here.
+: The empty struct is used as this effectively compiles down to 0, meaning no memory overhead here.
 
 
 * Done Signal Example

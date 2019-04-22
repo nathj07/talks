@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 
 	_ "github.com/lib/pq"
@@ -43,14 +44,17 @@ func fetchData(db *sql.DB) {
 			log.Fatalf("Error fetching data: %v", err)
 		}
 		defer rows.Close()
+		i := 0
 		for rows.Next() {
 			p := &Provider{}
 			if err := rows.Scan(&p.name, &p.url); err != nil {
 				fmt.Printf("Error in scan: %v", err)
 				continue
 			}
+			p.name = p.name +"_"+strconv.Itoa(i)
 			fmt.Printf("Write to chan: %q, %q\n", p.name, p.url)
 			providerChan <- p
+			i++
 		}
 	}
 	close(providerChan) // artificial closure for the demo
