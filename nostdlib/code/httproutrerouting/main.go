@@ -7,15 +7,6 @@ import (
 	"net/http"
 )
 
-package main
-
-import (
-"fmt"
-"github.com/julienschmidt/httprouter"
-"log"
-"net/http"
-"strings"
-)
 
 func namedAgeLocGET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "Age: %s; Loc: %s", ps.ByName("age"), ps.ByName("loc"))
