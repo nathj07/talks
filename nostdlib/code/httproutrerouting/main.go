@@ -8,12 +8,22 @@ import (
 )
 
 
-func namedAgeLocGET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ageLocGET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "Age: %s; Loc: %s", ps.ByName("age"), ps.ByName("loc"))
 }
 
-func namedAgeLocPUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ageLocPUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "PUTTING Age: %s; Loc: %s", ps.ByName("age"), ps.ByName("loc"))
+}
+
+func nameAgeLocGET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "Name: %s; Age: %s; Loc: %s",
+		ps.ByName("name"), ps.ByName("age"), ps.ByName("loc"))
+}
+
+func nameAgeLocPUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "PUTTING Name: %s; Age: %s; Loc: %s",
+		ps.ByName("name"),ps.ByName("age"), ps.ByName("loc"))
 }
 
 func main() {
@@ -21,8 +31,10 @@ func main() {
 	// Would rather have /age/:age/location/:location
 	// Using httprouter
 	router := httprouter.New()
-	router.GET("/age/:age/location/:loc", namedAgeLocGET) // using named path components
-	router.PUT("/age/:age/location/:loc", namedAgeLocPUT)
+	router.GET("/age/:age/location/:loc", ageLocGET)
+	router.PUT("/age/:age/location/:loc", ageLocPUT)
+	router.GET("/name/:name/age/:age/location/:loc", nameAgeLocGET)
+	router.PUT("/name/:name/age/:age/location/:loc", nameAgeLocPUT)
 
 	log.Print("Serving on port 9090")
 	err := http.ListenAndServe(":9090", router)

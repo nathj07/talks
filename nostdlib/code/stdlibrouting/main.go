@@ -48,6 +48,7 @@ func main() {
 	http.HandleFunc("/age/location/", ageLocHdlr) // get two things from the path
 	// this, with no vars, would clash with the above, and panic as there are not enough path parts
 	http.HandleFunc("/age/location/name", ageLocNameHdlr)
+	log.Print("Serving on port 9090")
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
