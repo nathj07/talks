@@ -36,10 +36,10 @@ func TestRetryFetcherHTTPMOCK(t *testing.T) {
 	mh := &httpmock.MockHandler{}
 	mh.On("Handle", http.MethodGet, "/", mock.Anything).Return(httpmock.Response{
 		Status: http.StatusNotFound,
-	}).Times(4)
+	}).Times(5)
 	s := httpmock.NewServer(mh)
 	defer s.Close()
-	statusCode, err := retryFetcher(s.URL(), []int{404}, 4)
+	statusCode, err := retryFetcher(s.URL(), []int{404}, 5)
 	require.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, statusCode)
 	mh.AssertExpectations(t)
