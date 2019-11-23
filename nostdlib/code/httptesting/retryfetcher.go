@@ -26,6 +26,6 @@ func retryFetcher(url string, retryCodes []int, maxRetries int) (int, error) {
 			return respCode, nil // return the current code
 		}
 	}
-	// return the final respCode ad no error
+	// return the final respCode and no error
 	return respCode, nil
 }

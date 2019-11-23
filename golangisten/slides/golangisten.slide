@@ -1,0 +1,93 @@
+Go Is Ten!
+26 November 2019
+Tags: go meetup, unit testing, docs, godoc, semaphore, go is ten, go northeast, golang northeast
+
+Nathan Davies
+Senior Software Engineer, Turnitin
+ndavies@turnitin.com
+@nathj07
+
+* Scene Setting
+- General comments
+- Unit testing
+- doc.go
+- Semaphore
+
+* General Comments
+- Size of the language - very small
+- Modernity - the standard library provides for most things
+- Community - is incredibly welcoming, helpful, and friendly
+
+* Unit Testing
+- Repetitive
+- Table driven
+- Test runners
+- Sub-tests
+
+* Repetitive
+    func TestGreetingEn(t *testing.T)
+    func TestGreetingEs(t *testing.T)
+    func TestGreetingFr(t *testing.T)
+    func TestGreetingDe(t *testing.T)
+- Each repeating the same setup and calling the same function
+
+* Table Driven
+    func TestGreeting(t *testing.T){
+        testCases := []struct{
+            in stirng
+            exp string
+        }{
+            {in: "Hi", exp:"Hello"},
+            {in: "Hola", exp:"Hola"},
+        }
+        for _, tc : range testCases{
+            // make the call, check the result
+        }
+    }
+* Table Driven cont'd
+- Reduced repetition in tests
+- Made tests easier to read and write
+- Made test failure harder to follow
+- Lost the ability to run distinct tests
+
+* Test Runner
+    func testRunner (t *testing.T, tc testCase){}
+    func TestGreetingEn(t *testing.T){
+        testRunner(testCase{in: "Hi", exp:"Hello"})
+    }
+- Can run individual tests
+- Can follow the failures more easily
+- Still easy to write and read
+- Something we devised at Tii, before sub tests
+
+* Subtests
+    func TestGreeting(t *testing.T){
+            testCases := []struct{
+                in stirng
+                exp string
+            }{
+                {in: "Hi", exp:"Hello"},
+                {in: "Hola", exp:"Hola"},
+            }
+            for _, tc : range testCases{
+                t.Run(tc.in, func(t *testing.T){
+                    // make the call, check the result
+                })
+            }
+        }
+    }
+* Subtests cont'd
+- Get the full benefits of the table driven test
+- Get the full benefits of individual tests
+- This is how we should be writing unit tests
+- Works for benchmarks too.
+
+* doc.go
+- Often overlooked
+- Provides excellent package level documentation
+
+    /* Package <name_of_package> ...
+    detailed explanation of the package, it's purpose and layout, and even some examples.
+    */
+
+- godoc is fantastic, make sure you are in-line with it
