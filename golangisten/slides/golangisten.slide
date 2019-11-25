@@ -91,3 +91,13 @@ ndavies@turnitin.com
     */
 
 - godoc is fantastic, make sure you are in-line with it
+
+* Semaphore
+- remember that channels and goroutines can be used separately
+
+    sem := make(chan struct{}, 10)
+    struct{}{} -> sem
+    // do the restricted/limited action
+    <-sem
+
+- simple, effective, and powerful
