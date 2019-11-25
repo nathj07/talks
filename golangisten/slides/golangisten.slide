@@ -44,6 +44,10 @@ ndavies@turnitin.com
             // make the call, check the result
         }
     }
+: here we lose the ability to run individual test cases easliy
+: I definitely commented out cases in the past
+: runs the risk of those going up in your PR; embarrassing at best.
+
 * Table Driven cont'd
 - Reduced repetition in tests
 - Made tests easier to read and write
@@ -59,6 +63,8 @@ ndavies@turnitin.com
 - Can follow the failures more easily
 - Still easy to write and read
 - Something we devised at Tii, before sub tests
+: gives us back the ability to run specific test
+: is a touch more verbose, though still better than lots of repetition
 
 * Subtests
     func TestGreeting(t *testing.T){
@@ -81,6 +87,10 @@ ndavies@turnitin.com
 - Get the full benefits of individual tests
 - This is how we should be writing unit tests
 - Works for benchmarks too.
+: the solution, no repetition.
+: simple table driven tests
+: easy to run specifics
+: this is my favourite addition to testing over the 10 years of Go.
 
 * doc.go
 - Often overlooked
