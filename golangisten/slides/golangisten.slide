@@ -106,7 +106,7 @@ ndavies@turnitin.com
 - remember that channels and goroutines can be used separately
 
     sem := make(chan struct{}, 10)
-    struct{}{} -> sem
+    sem <- struct{}{}
     // do the restricted/limited action
     <-sem
 
