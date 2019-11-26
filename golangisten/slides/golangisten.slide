@@ -101,6 +101,7 @@ ndavies@turnitin.com
     */
 
 - godoc is fantastic, make sure you are in-line with it
+- pkg.go.dev
 
 * Semaphore
 - remember that channels and goroutines can be used separately
