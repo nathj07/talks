@@ -21,7 +21,7 @@ This is the first interactive talk I have done.
 
 [Not just the standard lib](/nostdlib) is not the talk itself, rather this is code that was produced in support of a talk given at GowayFest 3.0 (link below)
 
-[Unit testing](/unit_test) provides ain troduction to unit testing in Go. I use a very simple application to highlight the benefits of TDD and table based testing.
+[Unit testing](/unit_test) provides an introduction to unit testing in Go. I use a very simple application to highlight the benefits of TDD and table based testing.
 
 [Useful libs](/usefullibs) was a lightening talk on libraries I've found useful, that I thought others might find helpful.
 
