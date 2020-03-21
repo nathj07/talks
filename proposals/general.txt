@@ -1,4 +1,0 @@
-Short Bio
-=========
-I'm a senior software engineer at Turnitin with a love for the Go language and community. I'm very active in my local Go community; helping to run the local meetup. Outside of software I love hiking and mountain biking and will take any opportunity for a ride.
-
