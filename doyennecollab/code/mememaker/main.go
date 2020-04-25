@@ -49,7 +49,7 @@ func main() {
 			log.Fatal(err)
 		}
 		// TODO: Build up post request - this will need more cli args too - see the request struct
-		// plus an output path to write teh file to
+		// plus an output path to write the file to
 	}
 	makeGetRequest()
 }
