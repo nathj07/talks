@@ -45,20 +45,24 @@ func main() {
 		if *memeID == 0 {
 			err = multierror.Append(err, fmt.Errorf("You must supply a meme template ID"))
 		}
-		if e := err.ErrorOrNil; e != nil {
-			log.Fatal(err)
+		if e := err.ErrorOrNil(); e != nil {
+			log.Fatalf("validation failure: %v", err)
 		}
 		// TODO: Build up post request - this will need more cli args too - see the request struct
 		// plus an output path to write the file to
 	}
-	makeGetRequest()
+	if *action == http.MethodGet {
+		makeGetRequest()
+		return
+	}
+	makePostRequest()
 }
 
 // makeGet request is here as a simple example of how to make a
 // basic HTTP GET request with Go.
 // For production purposes we would need to define our own HTTP client and not rely on the default
 func makeGetRequest() {
-	resp, err := http.Get("http://api.imgflip.com/get_memes")
+	resp, err := http.Get("https://api.imgflip.com/get_memes")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -81,9 +85,9 @@ func makeGetRequest() {
 // This needs to be completed.
 // You will need to:
 // - add more args to the cli, and validate them
-// - make POST request
+// - make POST request; using url values
 // - unmarshal the response, the data structure will depend on the status code
-// - fetch the created meme and write it to disk
+// - fetch the created meme and write it to disk (distinct function I expect)
 // (in the future we may work on displaying the meme, you use
 // os.Exec with the open command if you feel like it)
 func makePostRequest() {
