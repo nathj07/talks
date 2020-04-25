@@ -19,9 +19,9 @@ import (
 
 var (
 	username = flag.String("username", "", "Your username for the api.imgflip.com service")
-	password = flag.String("password", "", "Your password for the api,imgflip.com service")
+	password = flag.String("password", "", "Your password for the api.imgflip.com service")
 	action   = flag.String("action", "GET", "The action to perform against api.imgflip.com")
-	memeID   = flag.Int("meme", 0, "Meme template ID to ue in creating a mnew meme. Not needed for GET requests")
+	memeID   = flag.Int("meme", 0, "Meme template ID to ue in creating a new meme. Not needed for GET requests")
 )
 
 func main() {
